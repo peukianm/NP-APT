@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GP - Apt | Luxury Stay in Mouzaki</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+scroll-behavior:smooth;
+}
+
+body{
+font-family:'Montserrat',sans-serif;
+background:#111;
+color:white;
+overflow-x:hidden;
+}
+
+a{
+text-decoration:none;
+}
+
+.hero{
+height:100vh;
+background:
+linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.65)),
+url('bedroom.jpg');
+background-size:cover;
+background-position:center;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+padding:20px;
+position:relative;
+}
+
+.hero-content h1{
+font-size:70px;
+font-weight:700;
+letter-spacing:2px;
+margin-bottom:15px;
+}
+
+.hero-content p{
+font-size:22px;
+max-width:800px;
+margin:auto;
+color:#ddd;
+}
+
+.topbar{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+background:rgba(0,0,0,0.75);
+backdrop-filter:blur(8px);
+padding:18px 5%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+z-index:9999;
+}
+
+.logo{
+font-size:28px;
+font-weight:700;
+color:#d4af37;
+}
+
+.nav{
+display:flex;
+gap:18px;
+flex-wrap:wrap;
+}
+
+.nav a{
+color:white;
+font-weight:500;
+transition:0.3s;
+}
+
+.nav a:hover{
+color:#d4af37;
+}
+
+.lang-switch{
+display:flex;
+gap:10px;
+}
+
+.lang-switch button{
+background:#d4af37;
+border:none;
+padding:8px 14px;
+border-radius:20px;
+cursor:pointer;
+font-weight:600;
+}
+
+.section{
+padding:90px 8%;
+width:100%;
+}
+
+.section-title{
+text-align:center;
+margin-bottom:60px;
+}
+
+.section-title h2{
+font-size:42px;
+margin-bottom:10px;
+color:#d4af37;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+gap:30px;
+}
+
+.card{
+background:#1c1c1c;
+padding:30px;
+border-radius:20px;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-10px);
+}
+
+.gallery{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+gap:20px;
+}
+
+.gallery img{
+width:100%;
+height:350px;
+object-fit:cover;
+border-radius:18px;
+transition:0.4s;
+}
+
+.gallery img:hover{
+transform:scale(1.02);
+}
+
+.about{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:60px;
+align-items:center;
+}
+
+.about img{
+width:100%;
+border-radius:25px;
+}
+
+.about-text{
+font-size:18px;
+line-height:1.9;
+color:#ddd;
+}
+
+.btn{
+display:inline-block;
+padding:16px 28px;
+background:#d4af37;
+color:#111;
+border-radius:50px;
+font-weight:700;
+margin-top:20px;
+transition:0.3s;
+}
+
+.btn:hover{
+background:#f1cc58;
+}
+
+.contact-box{
+background:#1b1b1b;
+padding:50px;
+border-radius:25px;
+text-align:center;
+}
+
+.contact-box p{
+margin-bottom:15px;
+font-size:18px;
+}
+
+iframe{
+width:100%;
+height:450px;
+border:none;
+border-radius:25px;
+}
+
+footer{
+background:#000;
+padding:30px;
+text-align:center;
+color:#aaa;
+font-size:14px;
+}
+
+.hidden{
+display:none;
+}
+
+@media(max-width:900px){
+
+.hero-content h1{
+font-size:46px;
+}
+
+.hero-content p{
+font-size:18px;
+}
+
+.about{
+grid-template-columns:1fr;
+}
+
+.topbar{
+flex-direction:column;
+gap:15px;
+}
+
+.nav{
+justify-content:center;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+
+<div class="logo">
+GP - Apt
+<span style="font-size:12px;
+display:block;
+font-weight:400;
+letter-spacing:1px;
+color:#ccc;
+margin-top:2px;">
+powered by Together@home
+</span>
+</div>
+
+<div class="nav">
+
+<a href="#about" class="lang-el">Πληροφορίες</a>
+<a href="#services" class="lang-el">Παροχές</a>
+<a href="#useffull" class="lang-el">Χρηστικά</a>
+<a href="#gallery" class="lang-el">Φωτογραφίες</a>
+<a href="#guide" class="lang-el">Οδηγός</a>
+<a href="#location" class="lang-el">Τοποθεσία</a>
+<a href="#contact" class="lang-el">Επικοινωνία</a>
+
+<a href="#about" class="lang-en hidden">About</a>
+<a href="#services" class="lang-en hidden">Amenities</a>
+<a href="#useffull" class="lang-en hidden">Usefull</a>
+<a href="#gallery" class="lang-en hidden">Gallery</a>
+<a href="#guide" class="lang-en hidden">Guide</a>
+<a href="#location" class="lang-en hidden">Location</a>
+<a href="#contact" class="lang-en hidden">Contact</a>
+
+</div>
+
+<div class="lang-switch">
+<button onclick="setLanguage('el')">GR</button>
+<button onclick="setLanguage('en')">EN</button>
+</div>
+
+</div>
+
+<section class="hero">
+
+<div class="hero-content">
+
+<div class="lang-el">
+<h1>GP - Apt</h1>
+<p>Exclusive Stay & Relaxation in Mouzaki</p>
+<a class="btn" href="https://www.booking.com/Share-y6CvbP" target="_blank">Booking.com</a>
+</div>
+
+<div class="lang-en hidden">
+<h1>GP - Apt</h1>
+<p>Luxury apartment in the heart of Mouzaki</p>
+<a class="btn" href="https://www.booking.com/Share-y6CvbP" target="_blank">Booking.com</a>
+</div>
+
+</div>
+
+</section>
+
+<section class="section" id="about">
+
+<div class="section-title">
+
+<div class="lang-el">
+<h2>Σχετικά με το Κατάλυμα</h2>
+</div>
+
+<div class="lang-en hidden">
+<h2>About the Property</h2>
+</div>
+
+</div>
+
+<div class="about">
+
+<img src="kitchen1.jpg">
+
+<div class="about-text">
+
+<div class="lang-el">
+
+Το GP - Apt είναι ένα πλήρως ανακαινισμένο και μοντέρνο διαμέρισμα στο Μουζάκι Καρδίτσας, σχεδιασμένο για άνετη και ποιοτική διαμονή.
+<br><br>
+Το διαμέρισμα διαθέτει 1 υπνοδωμάτιο, 2 καναπέδεσ κρεβάτια, ευρύχωρο καθιστικό, πλήρως εξοπλισμένη κουζίνα, μοντέρνο μπάνιο και ιδιωτικό μπαλκόνι με θέα στην αυλή και το βουνό.
+<br><br>
+Οι επισκέπτες απολαμβάνουν:<br>
+• Δωρεάν Wi-Fi
+• Smart TV με streaming υπηρεσίες
+• Netflix, Cosmote TV
+• Κλιματισμό
+• Θέρμανση
+• Πλήρως εξοπλισμένη κουζίνα
+• Πιάτα, μαχαιροπήρουνα, κούπες
+• Ψυγείο
+• Φούρνος
+• Φούρνος μικροκυμάτων
+• Εστίες μαγειρέματος
+• Πλυντήριο πιάτων
+• Πλυντήριο ρούχων
+• Καφετιέρα
+• Εσπρεσιέρα
+• Βραστήρα
+• Τραπέζι φαγητού
+• Πιστολάκι μαλλιών
+• Πετσέτες και λευκά είδη
+• Χώρο καθιστικού
+• Μπαλκόνι
+• Πρόσβαση στην αυλή/κήπο
+• Εξωτερικο τρπέζι/καρέκλες
+• Είδη σιδερώματος
+• Καθαριστικά είδη
+• Θέα στο βουνό
+• Ιατρική βοήθεια σε περίπτωση ανάγκης με επικοινωνία με τον οικοδεσπότη
+• Δωρεάν χώρο στάθμευσης
+• Γρήγορο check-in/check-out
+<br><br>
+Το κατάλυμα αποτελεί ιδανική βάση για επισκέψεις στη Λίμνη Πλαστήρα, τα Μετέωρα, τα Τρίκαλα, το Περτούλι και την ευρύτερη περιοχή της Θεσσαλίας.
+
+<br><br>
+
+Το κατάλυμα διαχειρίζεται η Together@home με στόχο μια ξεχωριστή εμπειρία διαμονής.
+
+</div>
+
+<div class="lang-en hidden">
+
+GP - Apt is a fully renovated and modern apartment located in Mouzaki, Karditsa, designed to provide a comfortable and premium hospitality experience.
+<br><br>
+The apartment features one bedroom, a spacious living room, a fully equipped kitchen, a modern bathroom and a private balcony with beautiful city and mountain views.
+<br><br>
+Guests can enjoy:<br>
+• Free high-speed Wi-Fi
+• Smart TV with streaming services
+• Netflix & Cosmote TV
+• Air conditioning
+• Heating
+• Fully equipped kitchen
+• Plates, cutlery, glasses & mugs
+• Refrigerator
+• Oven
+• Microwave oven
+• Cooking hobs
+• Dishwasher
+• Washing machine
+• Coffee machine
+• Espresso machine
+• Electric kettle
+• Dining table
+• Hair dryer
+• Towels and bed linen
+• Comfortable seating area
+• Private balcony
+• Access to the yard/garden
+• Outdoor dining table & chairs
+• Ironing facilities
+• Cleaning products
+• Mountain view
+• Medical assistance in case of emergency through host communication
+• Free parking nearby
+• Fast check-in/check-out
+<br><br>
+The property is an ideal base for exploring Lake Plastira, Meteora, Trikala, Pertouli and the wider Thessaly region.
+
+<br><br>
+
+The property is professionally managed by Together@home.
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="section" id="services">
+
+<div class="section-title">
+
+<div class="lang-el">
+<h2>Παροχές</h2>
+</div>
+
+<div class="lang-en hidden">
+<h2>Amenities</h2>
+</div>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+<h3>Wi-Fi</h3>
+<p class="lang-el">Δωρεάν internet υψηλής ταχύτητας.</p>
+<p class="lang-en hidden">Free high-speed internet.</p>
+</div>
+
+<div class="card">
+<h3>Air Conditioning</h3>
+<p class="lang-el">Κλιματισμός και θέρμανση.</p>
+<p class="lang-en hidden">Air conditioning and heating.</p>
+</div>
+
+<div class="card">
+<h3>Kitchen</h3>
+<p class="lang-el">Πλήρως εξοπλισμένη κουζίνα.</p>
+<p class="lang-en hidden">Fully equipped kitchen.</p>
+</div>
+
+<div class="card">
+<h3>Smart TV</h3>
+<p class="lang-el">Τηλεόραση επίπεδης οθόνης με υπηρεσίες streaming.</p>
+<p class="lang-en hidden">Flat-screen TV with streaming services.</p>
+</div>
+
+<div class="card">
+<h3>Dishwasher</h3>
+<p class="lang-el">Πλυντήριο πιάτων για μεγαλύτερη άνεση.</p>
+<p class="lang-en hidden">Dishwasher for extra convenience.</p>
+</div>
+
+<div class="card">
+<h3>Coffee Station</h3>
+<p class="lang-el">Καφετιέρα και παροχές για καφέ & τσάι.</p>
+<p class="lang-en hidden">Coffee machine and tea facilities.</p>
+</div>
+
+<div class="card">
+<h3>Mountain View</h3>
+<p class="lang-el">Θέα στο βουνό και στην πόλη.</p>
+<p class="lang-en hidden">Mountain and city views.</p>
+</div>
+
+<div class="card">
+<h3>Balcony</h3>
+<p class="lang-el">Ιδιωτικό μπαλκόνι για στιγμές χαλάρωσης.</p>
+<p class="lang-en hidden">Private balcony for relaxation.</p>
+</div>
+
+<div class="card">
+<h3>Express Check-in</h3>
+<p class="lang-el">Γρήγορο και εύκολο check-in/check-out.</p>
+<p class="lang-en hidden">Fast and easy check-in/check-out.</p>
+</div>
+
+
+
+  
+
+<div class="card">
+<h3>Parking</h3>
+<p class="lang-el">Δωρεάν parking κοντά στο κατάλυμα.</p>
+<p class="lang-en hidden">Free parking near the apartment.</p>
+</div>
+
+<div class="card">
+<h3>Luxury Stay</h3>
+<p class="lang-el">Μοντέρνος και άνετος χώρος.</p>
+<p class="lang-en hidden">Modern and comfortable space.</p>
+</div>
+
+<div class="card">
+<h3>Together@home</h3>
+<p class="lang-el">Επαγγελματική φιλοξενία.</p>
+<p class="lang-en hidden">Professional hospitality services.</p>
+</div>
+
+</div>
+
+</section>
+
+<section class="section" id="gallery">
+
+<div class="section-title">
+
+<div class="lang-el">
+<h2>Φωτογραφίες</h2>
+</div>
+
+<div class="lang-en hidden">
+<h2>Gallery</h2>
+</div>
+
+</div>
+
+<div class="gallery">
+
+<img src="bedroom.jpg">
+  <img src="kitchen3.jpg">
+  <img src="kitchen1.jpg">
+  <img src="bath1.jpg">
+  <img src="livingroom1.jpg">
+  <img src="hall1.jpg">
+  <img src="dinning1.jpg">
+  <img src="lr1.webp">
+  <img src="garden.jpg">
+
+
+
+</div>
+
+</section>
+
+
+
+<section class="section" id="guide">
+
+<div class="section-title">
+
+<div class="lang-el">
+<h2>Ταξιδιωτικός Οδηγός</h2>
+</div>
+
+<div class="lang-en hidden">
+<h2>Travel Guide</h2>
+</div>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+<h3>🏛 Μετέωρα</h3>
+
+<p class="lang-el">
+Ένας από τους σημαντικότερους προορισμούς της Ελλάδας και Μνημείο Παγκόσμιας Κληρονομιάς UNESCO.
+Τα μοναστήρια είναι χτισμένα πάνω σε εντυπωσιακούς βράχους και προσφέρουν μοναδική θέα.
+Ιδανικός προορισμός για ημερήσια εκδρομή από το Μουζάκι.
+</p>
+
+<p class="lang-en hidden">
+One of Greece's most iconic UNESCO World Heritage Sites.
+The monasteries are built on spectacular rock formations and offer breathtaking views.
+Perfect for a day trip from Mouzaki.
+</p>
+
+</div>
+
+<div class="card">
+<h3>🌲 Λίμνη Πλαστήρα</h3>
+
+<p class="lang-el">
+Μία από τις ομορφότερες λίμνες της Ελλάδας.
+Προσφέρει πεζοπορία, ποδηλασία, κανό, ιππασία και μοναδικά τοπία όλες τις εποχές του χρόνου.
+</p>
+
+<p class="lang-en hidden">
+One of Greece’s most beautiful lakes.
+Ideal for hiking, cycling, canoeing, horse riding and nature escapes throughout the year.
+</p>
+
+</div>
+
+<div class="card">
+<h3>🎄 Μύλος των Ξωτικών - Τρίκαλα</h3>
+
+<p class="lang-el">
+Η μεγαλύτερη χριστουγεννιάτικη γιορτή της Ελλάδας.
+Κάθε Δεκέμβριο τα Τρίκαλα μεταμορφώνονται σε ένα παραμυθένιο χωριό γεμάτο δραστηριότητες για μικρούς και μεγάλους.
+</p>
+
+<p class="lang-en hidden">
+The largest Christmas theme park in Greece.
+Every December, Trikala transforms into a magical Christmas destination.
+</p>
+
+</div>
+
+<div class="card">
+<h3>🏙 Τρίκαλα</h3>
+
+<p class="lang-el">
+Μία από τις πιο όμορφες πόλεις της Θεσσαλίας.
+Επισκεφθείτε το Φρούριο Τρικάλων, το Βαρούσι, τον Ληθαίο ποταμό και τα παραδοσιακά καφέ και εστιατόρια της πόλης.
+</p>
+
+<p class="lang-en hidden">
+One of Thessaly's most beautiful cities.
+Explore Trikala Castle, Varousi old town, Lithaios River and the city's vibrant food scene.
+</p>
+
+</div>
+
+<div class="card">
+<h3>⛷ Χιονοδρομικό Κέντρο Περτουλίου</h3>
+
+<p class="lang-el">
+Αγαπημένος χειμερινός προορισμός για σκι και δραστηριότητες στο χιόνι.
+Περιβάλλεται από ελατοδάση και προσφέρει υπέροχη θέα στα βουνά της Πίνδου.
+</p>
+
+<p class="lang-en hidden">
+A popular winter destination for skiing and snow activities.
+Surrounded by fir forests and stunning mountain scenery.
+</p>
+
+</div>
+
+<div class="card">
+<h3>🏔 Ελάτη & Περτούλι</h3>
+
+<p class="lang-el">
+Παραδοσιακά ορεινά χωριά με υπέροχα τοπία, τοπικές ταβέρνες και δραστηριότητες στη φύση.
+Ιδανικά για όλες τις εποχές του χρόνου.
+</p>
+
+<p class="lang-en hidden">
+Traditional mountain villages with beautiful scenery, local taverns and outdoor activities.
+Perfect all year round.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+
+
+  
+<section class="section" id="location">
+
+<div class="section-title">
+
+<div class="lang-el">
+<h2>Τοποθεσία</h2>
+</div>
+
+<div class="lang-en hidden">
+<h2>Location</h2>
+</div>
+
+</div>
+
+<iframe
+src="https://maps.google.com/maps?q=Mouzaki%20Karditsa&t=&z=13&ie=UTF8&iwloc=&output=embed">
+</iframe>
+
+</section>
+
+<section class="section" id="contact">
+
+<div class="contact-box">
+
+<div class="lang-el">
+
+<h2 style="margin-bottom:30px;color:#d4af37;">Επικοινωνία</h2>
+
+<p>📍 Μπουμπουλίνας 3, Μουζάκι Καρδίτσας</p>
+
+<p>📞 <a href="tel:+306974483266" style="color:#d4af37;">6974483266</a></p>
+
+<p>✉️ <a href="mailto:peukianm@noskard.gr" style="color:#d4af37;">peukianm@noskard.gr</a></p>
+
+<a class="btn" href="https://maps.app.goo.gl/mxMfc1HgAG9LJiE87?g_st=ic" target="_blank">
+Google Maps
+</a>
+
+</div>
+
+<div class="lang-en hidden">
+
+<h2 style="margin-bottom:30px;color:#d4af37;">Contact</h2>
+
+<p>📍 Bouboulinas 3, Mouzaki Karditsa</p>
+<p></π>Μιχάλης, ο οικοδεστότης σας: </p>
+<p>📞 <a href="tel:+306974483266" style="color:#d4af37;">6974483266</a></p>
+
+<p>✉️ <a href="mailto:peukianm@noskard.gr" style="color:#d4af37;">peukianm@noskard.gr</a></p>
+
+<a class="btn" href="https://maps.app.goo.gl/mxMfc1HgAG9LJiE87?g_st=ic" target="_blank">
+Open in Google Maps
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+<footer>
+
+© 2026 GP - apt | Together@home
+
+</footer>
+
+<script>
+
+function setLanguage(lang){
+
+const el=document.querySelectorAll('.lang-el');
+const en=document.querySelectorAll('.lang-en');
+
+if(lang==='el'){
+el.forEach(i=>i.classList.remove('hidden'));
+en.forEach(i=>i.classList.add('hidden'));
+document.documentElement.lang='el';
+}
+
+else{
+en.forEach(i=>i.classList.remove('hidden'));
+el.forEach(i=>i.classList.add('hidden'));
+document.documentElement.lang='en';
+}
+
+}
+
+</script>
+
+</body>
+</html>
