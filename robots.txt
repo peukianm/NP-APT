@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://peukianm.github.io/NP-APT/sitemap.xml
