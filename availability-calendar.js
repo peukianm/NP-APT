@@ -69,7 +69,7 @@
   document.querySelectorAll('.lang-switch button').forEach(b => b.addEventListener('click', () => { draw(); showStatus(); }));
   draw();
   showStatus();
-  fetch('/availability.json', {cache: 'no-store'})
+  fetch('https://raw.githubusercontent.com/peukianm/NP-APT/main/availability.json', {cache: 'no-store'})
     .then(response => { if (!response.ok) throw Error('No published calendar'); return response.json(); })
     .then(data => {
       if (data.schemaVersion !== 1 || !Array.isArray(data.blockedDates) || typeof data.lastUpdated !== 'string') throw Error('Invalid data');
