@@ -1,4 +1,4 @@
-name: Refresh Booking.com availability
+name: Refresh Booking.com + Airbnb availability
 on:
   schedule:
     - cron: '7,37 * * * *'
@@ -16,9 +16,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: true
-      - name: Fetch private calendar and publish blocked dates only
+      - name: Fetch both private calendars and publish blocked dates only
         env:
           BOOKING_ICAL_URL: ${{ secrets.BOOKING_ICAL_URL }}
+          AIRBNB_ICAL_URL: ${{ secrets.AIRBNB_ICAL_URL }}
         run: python3 scripts/sync_availability.py
       - name: Commit sanitized availability (only if changed)
         run: |
