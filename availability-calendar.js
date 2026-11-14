@@ -75,7 +75,7 @@
       if (data.schemaVersion !== 1 || !Array.isArray(data.blockedDates) || typeof data.lastUpdated !== 'string') throw Error('Invalid data');
       payload = data;
       const stamp = new Date(data.lastUpdated);
-      fresh = Number.isFinite(stamp.getTime()) && Date.now() - stamp.getTime() < 36 * 60 * 60 * 1000 && stamp.getTime() < Date.now() + 10 * 60 * 1000;
+      fresh = data.source === 'Booking.com + Airbnb iCal' && Number.isFinite(stamp.getTime()) && Date.now() - stamp.getTime() < 36 * 60 * 60 * 1000 && stamp.getTime() < Date.now() + 10 * 60 * 1000;
       blocked = new Set(data.blockedDates.filter(x => /^\d{4}-\d{2}-\d{2}$/.test(x)));
       draw();
       showStatus();
