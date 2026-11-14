@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export privacy-safe blocked dates from a Booking.com iCal feed.
+"""Export privacy-safe blocked dates from Booking.com and Airbnb iCal feeds.
 
 Only ISO dates and a sync timestamp enter the public JSON; reservation
 summaries, guest names, descriptions, UIDs and the feed URL remain private.
@@ -86,14 +86,17 @@ def blocks_from_feed(text):
         raise ValueError("Truncated VEVENT")
     return sorted(dates), saw_events
 
-def main():
-    url = os.environ.get("BOOKING_ICAL_URL", "").strip()
+def fetch_calendar(url, allowed_hosts):
     parsed = urllib.parse.urlparse(url)
-    if parsed.scheme != "https" or parsed.hostname != "ical.booking.com" or parsed.username or parsed.password:
-        raise ValueError("BOOKING_ICAL_URL secret must be a valid https://ical.booking.com link")
-    req = urllib.request.Request(url, headers={"User-Agent": "TogetherHomeAvailabilitySync/1.0", "Accept": "text/calendar"})
-    with urllib.request.urlopen(req, timeout=25) as response:
-        if urllib.parse.urlparse(response.geturl()).hostname != "ical.booking.com":
+    if parsed.scheme != "https" or parsed.hostname not in allowed_hosts or parsed.username or parsed.password:
+        raise ValueError("Invalid calendar source configuration")
+    request = urllib.request.Request(
+        url,
+        headers={"User-Agent": "TogetherHomeAvailabilitySync/2.0", "Accept": "text/calendar"}
+    )
+    with urllib.request.urlopen(request, timeout=30) as response:
+        final = urllib.parse.urlparse(response.geturl())
+        if final.scheme != "https" or final.hostname not in allowed_hosts:
             raise ValueError("Unexpected calendar redirect")
         data = response.read(MAX_FEED_BYTES + 1)
     if len(data) > MAX_FEED_BYTES:
@@ -101,18 +104,37 @@ def main():
     feed = data.decode("utf-8-sig", errors="strict")
     if "BEGIN:VCALENDAR" not in feed or "END:VCALENDAR" not in feed:
         raise ValueError("Invalid iCalendar feed")
-    blocked, count = blocks_from_feed(feed)
+    return blocks_from_feed(feed)
+
+
+def main():
+    # Require BOTH source feeds to avoid incorrectly showing Airbnb bookings as open.
+    booking_url = os.environ.get("BOOKING_ICAL_URL", "").strip()
+    airbnb_url = os.environ.get("AIRBNB_ICAL_URL", "").strip()
+    if not booking_url or not airbnb_url:
+        raise ValueError("Both calendar secrets are required")
+    booking_days, booking_events = fetch_calendar(booking_url, {"ical.booking.com"})
+    airbnb_days, airbnb_events = fetch_calendar(airbnb_url, {"www.airbnb.com", "airbnb.com"})
+    # Set union eliminates duplicates when calendars sync with one another.
+    blocked = sorted(set(booking_days).union(airbnb_days))
     now = dt.datetime.now(dt.timezone.utc).replace(microsecond=0)
     result = {
         "schemaVersion": 1,
-        "source": "Booking.com iCal",
+        "source": "Booking.com + Airbnb iCal",
         "lastUpdated": now.isoformat().replace("+00:00", "Z"),
         "horizonDays": HORIZON,
         "blockedDates": blocked,
-        "notice": "Indicative only; confirm availability with the booking provider."
+        "notice": "Indicative only. Verify dates and prices on Booking.com or Airbnb."
     }
-    OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"Updated availability.json: {len(blocked)} blocked days across {count} events; no private event details published")
+    # Atomic replacement only after both sources have fetched and parsed successfully.
+    temp = OUT.with_suffix(".json.tmp")
+    temp.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    temp.replace(OUT)
+    print(
+        f"Updated sanitized availability: {len(blocked)} blocked dates; "
+        f"Booking.com: {booking_events} events, Airbnb: {airbnb_events} events. "
+        "No reservation details or private URLs published."
+    )
 
 if __name__ == "__main__":
     try:
