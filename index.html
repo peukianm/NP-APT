@@ -255,6 +255,8 @@ justify-content:center;
 .gallery img{cursor:zoom-in}.gallery img:focus-visible,.route-chip:focus-visible,.mobile-booking-bar a:focus-visible{outline:3px solid #d4af37;outline-offset:3px}.photo-lightbox[hidden]{display:none}.photo-lightbox{position:fixed;inset:0;z-index:20000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.96);padding:65px 62px}.photo-lightbox img{max-width:100%;max-height:90vh;object-fit:contain;border-radius:6px}.photo-lightbox button{position:absolute;border:0;background:rgba(255,255,255,.16);color:#fff;cursor:pointer;border-radius:8px;padding:3px 14px;font-size:40px}.lightbox-close{top:14px;right:18px}.lightbox-prev{left:9px;top:48%}.lightbox-next{right:9px;top:48%}.lightbox-count{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);color:#fff}.faq-wrap{max-width:900px;margin:auto}.faq-wrap details{border:1px solid #5f5741;border-radius:12px;margin:12px 0;padding:17px 22px;background:#1c1c1c}.faq-wrap summary{cursor:pointer;font-size:18px;font-weight:600;color:#e7c86d}.faq-wrap details p{line-height:1.85;margin-top:12px;color:#ddd}.daytrip-panel{border:1px solid #766436;padding:22px;border-radius:17px;margin:0 0 25px;background:#1b1b1b}.daytrip-panel h3{color:#d4af37;margin-bottom:10px}.daytrip-panel p{line-height:1.7;color:#ddd}.route-chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}.route-chip{color:#f9df9a;border:1px solid #8f763e;border-radius:30px;padding:10px 14px;display:inline-flex;gap:5px}.mobile-booking-bar{display:none}@media(max-width:700px){body{padding-bottom:75px}.section{padding:62px 5%}.grid,.gallery{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}.topbar{position:relative;padding:13px 4%}.nav{justify-content:center;gap:11px}.nav a{font-size:12px}.hero{min-height:76vh;height:auto;padding:75px 16px}.hero-content h1{font-size:38px}.photo-lightbox{padding:65px 38px}.mobile-booking-bar{position:fixed;bottom:0;left:0;right:0;z-index:15000;display:flex;gap:6px;padding:10px;background:rgba(18,18,18,.97);box-shadow:0 -5px 20px #0008}.mobile-booking-bar a{flex:1;display:block;text-align:center;background:#d4af37;color:#151515;padding:11px 5px;font-size:12px;border-radius:9px;font-weight:700}}
 
 .date-search-panel{max-width:960px;margin:auto;background:#1c1c1c;border:1px solid #75633a;border-radius:18px;padding:26px}.date-search-panel>p{line-height:1.7;color:#ddd;margin-bottom:14px}.date-search-form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:end}.date-search-form label{display:flex;flex-direction:column;gap:7px;color:#f4e0a3;font-weight:600}.date-search-form input,.date-search-form select{width:100%;padding:13px;border:1px solid #898176;border-radius:8px;background:#fff;color:#222;font:inherit;color-scheme:light}.date-search-actions{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px}.date-search-actions button{padding:12px 18px;background:#d4af37;color:#151515;border:0;border-radius:9px;cursor:pointer;font-weight:700}.date-disclaimer{font-size:13px;color:#c5c5c5!important}.date-search-message{color:#ffcf8c!important}@media(max-width:700px){.date-search-form{grid-template-columns:1fr}.date-search-actions button{flex:1}}
+
+.site-nav-toggle{display:none;background:#d4af37;color:#111;border:0;padding:9px 16px;border-radius:9px;cursor:pointer;font-weight:700}.review-portal{max-width:900px;margin:auto}.review-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}.review-portal p{line-height:1.8}@media(max-width:700px){.site-nav-toggle{display:block}.topbar .nav{display:none;flex-direction:column;width:100%;align-items:center;gap:4px}.topbar .nav.nav-open{display:flex}.topbar .nav a{padding:7px 0;font-size:14px}}
 </style>
 
 <link rel="canonical" href="https://np.together-home.gr/">
@@ -354,7 +356,8 @@ powered by Together@home
 </div>
 </div>
 
-<div class="nav">
+<button type="button" class="site-nav-toggle" aria-expanded="false" aria-controls="site-main-nav"><span class="lang-el">☰ Μενού</span><span class="lang-en hidden">☰ Menu</span></button>
+<div class="nav" id="site-main-nav">
 
 <a href="#about" class="lang-el">Πληροφορίες</a>
 <a href="#services" class="lang-el">Παροχές</a>
@@ -801,6 +804,7 @@ src="https://maps.google.com/maps?q=Mouzaki%20Karditsa&t=&z=13&ie=UTF8&iwloc=&ou
 
 </section>
 
+<section class="section" id="reviews"><div class="section-title"><h2 class="lang-el">Αξιολογήσεις επισκεπτών</h2><h2 class="lang-en hidden">Guest reviews</h2></div><div class="contact-box review-portal"><p class="lang-el">Διάβασε πραγματικές αξιολογήσεις του NP-Apt στις πλατφόρμες κρατήσεων. Οι αξιολογήσεις, οι βαθμολογίες και οι ημερομηνίες ενημερώνονται από τις ίδιες τις πλατφόρμες.</p><p class="lang-en hidden">Read verified NP-Apt guest feedback on the booking platforms. Ratings and review dates are maintained by the platforms.</p><div class="review-actions"><a class="btn" href="https://www.booking.com/hotel/gr/np-apt-exclusive-stay-amp-relaxation-in-mouzaki.el.html" rel="noopener noreferrer" target="_blank">Booking.com ↗</a><a class="btn" href="https://www.airbnb.gr/rooms/1692278528233220883" rel="noopener noreferrer" target="_blank">Airbnb ↗</a></div></div></section>
 <section class="section" id="contact">
 
 <div class="contact-box">
@@ -877,6 +881,9 @@ document.documentElement.lang='en';
 </script>
 <script>
 (function(){const form=document.getElementById('date-search-form');if(!form)return;const inDate=form.elements.checkin,outDate=form.elements.checkout;const today=new Date();const todayLocal=new Date(today.getTime()-today.getTimezoneOffset()*60000).toISOString().slice(0,10);inDate.min=todayLocal;outDate.min=todayLocal;inDate.addEventListener('change',()=>{outDate.min=inDate.value||todayLocal;if(outDate.value&&outDate.value<=inDate.value)outDate.value=''});form.addEventListener('submit',event=>{event.preventDefault();const status=document.querySelector('.date-search-message');const start=inDate.value,end=outDate.value;if(!start||!end||start>=end){status.textContent=document.documentElement.lang==='en'?'Please choose a valid check-in and later check-out date.':'Επίλεξε έγκυρη άφιξη και μεταγενέστερη αναχώρηση.';return}status.textContent='';const platform=event.submitter&&event.submitter.dataset.platform==='airbnb'?'airbnb':'booking';const url=new URL(platform==='airbnb'?'https://www.airbnb.gr/rooms/1692278528233220883':'https://www.booking.com/hotel/gr/np-apt-exclusive-stay-amp-relaxation-in-mouzaki.el.html');if(platform==='airbnb'){url.searchParams.set('check_in',start);url.searchParams.set('check_out',end);url.searchParams.set('adults',form.elements.guests.value)}else{url.searchParams.set('checkin',start);url.searchParams.set('checkout',end);url.searchParams.set('group_adults',form.elements.guests.value);url.searchParams.set('no_rooms','1')}window.open(url.toString(),'_blank','noopener,noreferrer')})})();
+</script>
+<script>
+(function(){const toggle=document.querySelector('.site-nav-toggle');const nav=document.getElementById('site-main-nav');if(!toggle||!nav)return;toggle.addEventListener('click',()=>{const opened=nav.classList.toggle('nav-open');toggle.setAttribute('aria-expanded',String(opened))});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('nav-open');toggle.setAttribute('aria-expanded','false')}))})();
 </script>
 </body>
 </html>
