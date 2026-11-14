@@ -67,8 +67,8 @@ def blocks_from_feed(text):
                 raise ValueError("Recurring events require explicit handling")
             if "DTSTART" not in props or "DTEND" not in props:
                 raise ValueError("VEVENT is missing DTSTART or DTEND")
-            start = parse_date(*props["DTSTART"])
-            end = parse_date(*props["DTEND"])
+            start = parse_date(props["DTSTART"][1], props["DTSTART"][0])
+            end = parse_date(props["DTEND"][1], props["DTEND"][0])
             if end <= start:
                 raise ValueError("Invalid blocked interval")
             cursor = max(start, today)
