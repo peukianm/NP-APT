@@ -1,0 +1,29 @@
+name: Refresh Booking.com availability
+on:
+  schedule:
+    - cron: '7,37 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: booking-availability
+  cancel-in-progress: false
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Fetch private calendar and publish blocked dates only
+        env:
+          BOOKING_ICAL_URL: ${{ secrets.BOOKING_ICAL_URL }}
+        run: python3 scripts/sync_availability.py
+      - name: Commit sanitized availability (only if changed)
+        run: |
+          git add availability.json
+          if ! git diff --cached --quiet; then
+            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "Update availability data"
+            git push
+          fi
