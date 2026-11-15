@@ -282,7 +282,13 @@ justify-content:center;
 
 /* Highlight calendar navigation and offset for the fixed topbar */
 #availability{scroll-margin-top:105px}.hero-availability-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;background:#d4af37;color:#171717;border:2px solid #f2d985;font-weight:700;box-shadow:0 4px 18px rgba(0,0,0,.35)}.hero-availability-btn:hover,.hero-availability-btn:focus-visible{background:#ffe69a;color:#111;transform:translateY(-2px)}
-.property-brand-logo{width:110px;height:auto;max-height:54px;object-fit:contain;background:#fff}.property-logo-link{display:flex;align-items:center}@media(max-width:700px){.property-brand-logo{width:92px;height:auto}}</style>
+.property-brand-logo{width:110px;height:auto;max-height:54px;object-fit:contain;background:#fff}.property-logo-link{display:flex;align-items:center}@media(max-width:700px){.property-brand-logo{width:92px;height:auto}}
+/* Keep apartment name left-aligned and vertically centered in the header */
+.topbar>.logo{flex:0 0 auto;align-self:center;margin-right:auto;justify-content:flex-start;text-align:left}
+.topbar .property-logo-text{text-align:left}
+@media(max-width:900px){.topbar{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between}.topbar>.logo{align-self:center;margin-right:auto}.topbar>.nav{width:100%;justify-content:center}}
+@media(max-width:700px){.topbar{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between}.topbar>.logo{align-self:center;flex:0 1 auto;margin-right:auto}.topbar>.site-nav-toggle{margin-left:auto}.topbar>.nav{width:100%;order:3}}
+</style>
 
 <link rel="canonical" href="https://np.together-home.gr/">
 <meta name="robots" content="index, follow, max-image-preview:large">
