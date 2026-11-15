@@ -288,6 +288,15 @@ justify-content:center;
 .topbar .property-logo-text{text-align:left}
 @media(max-width:900px){.topbar{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between}.topbar>.logo{align-self:center;margin-right:auto}.topbar>.nav{width:100%;justify-content:center}}
 @media(max-width:700px){.topbar{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between}.topbar>.logo{align-self:center;flex:0 1 auto;margin-right:auto}.topbar>.site-nav-toggle{margin-left:auto}.topbar>.nav{width:100%;order:3}}
+
+/* Center apartment identity independently of navigation and language controls. */
+.topbar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);grid-template-areas:". brand language" "navigation navigation navigation";align-items:center;justify-items:center;column-gap:10px;row-gap:8px;padding:12px 4%;flex-direction:unset}
+.topbar>.logo{grid-area:brand;margin:0;align-self:center;justify-self:center;justify-content:center;text-align:center;flex:none}
+.topbar .property-logo-text{text-align:center}
+.topbar>.nav{grid-area:navigation;width:100%;justify-content:center;margin:0}
+.topbar>.lang-switch{grid-area:language;justify-self:end}
+@media(max-width:900px){.topbar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);grid-template-areas:". brand language" "navigation navigation navigation";row-gap:10px}.topbar>.logo{margin:0;justify-self:center}.topbar>.nav{grid-area:navigation;width:100%;justify-content:center}}
+@media(max-width:700px){.topbar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);grid-template-areas:"toggle brand language" "navigation navigation navigation";align-items:center;gap:8px;padding:12px 3%}.topbar>.site-nav-toggle{grid-area:toggle;margin:0;justify-self:start}.topbar>.logo{grid-area:brand;justify-self:center;margin:0;flex:none}.topbar>.lang-switch{grid-area:language;justify-self:end}.topbar>.nav{grid-area:navigation;width:100%;order:unset}}
 </style>
 
 <link rel="canonical" href="https://np.together-home.gr/">
