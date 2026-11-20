@@ -28,7 +28,7 @@
       const response=await fetch('https://api.github.com/repos/peukianm/'+repo+'/contents/rates.json?ref=main&_='+Date.now(),{cache:'no-store',headers:{Accept:'application/vnd.github+json'}});
       if(!response.ok)throw Error('GitHub API unavailable');
       const entry=await response.json();
-      const bytes=Uint8Array.from(atob(entry.content.replace(/\\s/g,'')),c=>c.charCodeAt(0));
+      const bytes=Uint8Array.from(atob(entry.content.replace(/\s/g,'')),c=>c.charCodeAt(0));
       data=JSON.parse(new TextDecoder().decode(bytes));
     }catch(e){
       try{const response=await fetch(rateSource+'?t='+Date.now(),{cache:'no-store'});if(!response.ok)throw Error('Rates missing');data=await response.json();}
