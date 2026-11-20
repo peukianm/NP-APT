@@ -970,7 +970,8 @@ document.documentElement.lang='en';
   const status=document.querySelector('.date-search-message');
   const links=[...form.querySelectorAll('a.booking-action')];
   const urls={booking:'https://www.booking.com/hotel/gr/np-apt-exclusive-stay-amp-relaxation-in-mouzaki.el.html',airbnb:'https://www.airbnb.gr/rooms/1692278528233220883'};
-  const maxAdults=form.closest('.date-search-panel')?.nextElementSibling?.querySelector('[data-property="NP-Apt"]')?3:4;
+  const property=document.getElementById('direct-request-form')?.dataset.property;
+  const maxAdults=property==='NP-Apt'?3:4;
   const maxChildren=maxAdults===3?2:3;
   const en=()=>document.documentElement.lang==='en';
   function notice(el,english){status.textContent=en()?english:el;}
