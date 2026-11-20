@@ -144,14 +144,19 @@ next.addEventListener('click',()=>{
   if(!active||next.disabled)return;
   details.hidden=false;next.hidden=true;status.textContent='';
   prepareCaptcha();
-  const first=details.querySelector('[name="firstname"]');if(first)first.focus({preventScroll:true});
-  details.scrollIntoView({behavior:'smooth',block:'nearest'});
+  if(dialog&&typeof dialog.showModal==='function')dialog.showModal();
+  else details.scrollIntoView({behavior:'smooth',block:'nearest'});
 });
 // Email delivery requires a deployed server endpoint with Gmail OAuth / Apps Script authorization.
 // Never show the success dialog on mere button click or on a failed request.
 const dialog=document.getElementById('booking-contact-dialog');
 const closeDialog=dialog?.querySelector('[data-close-booking-dialog]');
-if(closeDialog)closeDialog.addEventListener('click',()=>dialog.close());
+if(closeDialog)closeDialog.addEventListener('click',()=>{
+  dialog.close();
+  const first=details.querySelector('[name="firstname"]');
+  if(first)first.focus({preventScroll:true});
+  details.scrollIntoView({behavior:'smooth',block:'nearest'});
+});
 const emailEndpoint=typeof window.TOGETHER_HOME_BOOKING_EMAIL_ENDPOINT==='string'
   ? window.TOGETHER_HOME_BOOKING_EMAIL_ENDPOINT.trim() : '';
 const turnstileSiteKey=typeof window.TOGETHER_HOME_TURNSTILE_SITE_KEY==='string'
@@ -212,8 +217,7 @@ form.addEventListener('submit',async event=>{
     const result=await response.json();
     if(result.success!==true)throw Error('Email not confirmed');
     status.textContent='';
-    if(dialog&&typeof dialog.showModal==='function')dialog.showModal();
-    else say('Το αίτημα εστάλη και το κατάλυμα θα επικοινωνήσει μαζί σας.','The request was sent and the property will contact you.');
+    say('Το αίτημά σας στάλθηκε επιτυχώς. Θα επικοινωνήσουμε μαζί σας από το κατάλυμα για την ολοκλήρωση της κράτησης.','Your request was sent successfully. The property will contact you to finalize the booking.');
     active=null;next.disabled=true;details.hidden=true;
   }catch(error){
     say('Δεν επιβεβαιώθηκε η αποστολή του email. Το αίτημα ΔΕΝ έχει καταχωριστεί. Δοκιμάστε ξανά ή επικοινωνήστε μαζί μας.','Email delivery could not be confirmed. Your request was NOT recorded. Please try again or contact us.');
