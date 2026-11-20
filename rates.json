@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "currency": "EUR",
+  "status": "unconfigured",
+  "description": "Public rate rules; edit using private local rate manager. Prices are not active until status=active and every needed date has a complete rule.",
+  "ageBands": [
+    {
+      "key": "infant",
+      "min": 0,
+      "max": 2
+    },
+    {
+      "key": "child",
+      "min": 3,
+      "max": 11
+    },
+    {
+      "key": "teen",
+      "min": 12,
+      "max": 17
+    }
+  ],
+  "days": {}
+}
