@@ -20,7 +20,23 @@
   const ageBand=a=>a<=2?'infant':a<=11?'child':'teen';
   function childAges(){return [...ageContainer.querySelectorAll('input[data-child-age]')].map(x=>x.value===''?NaN:Number(x.value));}
   function renderAges(){const count=Number(children.value),prev=childAges();ageContainer.replaceChildren();for(let i=0;i<count;i++){const label=document.createElement('label'),title=document.createElement('span'),input=document.createElement('input');title.textContent=(document.documentElement.lang==='en'?'Age of child ':'Ηλικία παιδιού ')+(i+1)+' *';input.type='number';input.min='0';input.max='17';input.step='1';input.required=true;input.dataset.childAge='';input.name='childAge'+(i+1);input.inputMode='numeric';if(Number.isInteger(prev[i]))input.value=prev[i];input.addEventListener('input',()=>{message.textContent='';updateEstimate()});label.append(title,input);ageContainer.append(label);}}
-  async function loadRates(){try{const response=await fetch(rateSource+'?t='+Date.now(),{cache:'no-store'});if(!response.ok)throw Error('No rates');const data=await response.json();rates=data.schemaVersion===1&&data.currency==='EUR'&&data.status==='active'&&data.days&&typeof data.days==='object'?data:null;}catch(e){rates=null;}updateEstimate();}
+  async function loadRates(){
+    let data=null;
+    // Prefer GitHub's current file contents. Fall back to raw GitHub if API is rate-limited or unavailable.
+    try{
+      const repo=property==='NP-Apt'?'NP-APT':'GP-APT';
+      const response=await fetch('https://api.github.com/repos/peukianm/'+repo+'/contents/rates.json?ref=main&_='+Date.now(),{cache:'no-store',headers:{Accept:'application/vnd.github+json'}});
+      if(!response.ok)throw Error('GitHub API unavailable');
+      const entry=await response.json();
+      const bytes=Uint8Array.from(atob(entry.content.replace(/\\s/g,'')),c=>c.charCodeAt(0));
+      data=JSON.parse(new TextDecoder().decode(bytes));
+    }catch(e){
+      try{const response=await fetch(rateSource+'?t='+Date.now(),{cache:'no-store'});if(!response.ok)throw Error('Rates missing');data=await response.json();}
+      catch(e2){data=null;}
+    }
+    rates=data&&data.schemaVersion===1&&data.currency==='EUR'&&data.status==='active'&&data.days&&typeof data.days==='object'?data:null;
+    updateEstimate();
+  }
   function quoteForStay(r){
     if(!rates)return null;
     const a=Number(adults.value),ages=childAges();
