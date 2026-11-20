@@ -6,7 +6,9 @@
   const dates=document.getElementById('date-search-form');
   if(!form||!dates)return;
   const property=form.dataset.property;
-  const capacity=property==='NP-Apt'?3:4;
+  const capacity=4;
+  const maxAdults=property==='NP-Apt'?3:4;
+  const maxChildren=property==='NP-Apt'?2:3;
   const source='https://raw.githubusercontent.com/peukianm/'+(property==='NP-Apt'?'NP-APT':'GP-APT')+'/main/availability.json';
   const start=dates.querySelector('[name="checkin"]');
   const end=dates.querySelector('[name="checkout"]');
@@ -19,7 +21,24 @@
   function childAges(){return [...ageContainer.querySelectorAll('input[data-child-age]')].map(x=>x.value===''?NaN:Number(x.value));}
   function renderAges(){const count=Number(children.value),prev=childAges();ageContainer.replaceChildren();for(let i=0;i<count;i++){const label=document.createElement('label'),title=document.createElement('span'),input=document.createElement('input');title.textContent=(document.documentElement.lang==='en'?'Age of child ':'Ηλικία παιδιού ')+(i+1)+' *';input.type='number';input.min='0';input.max='17';input.step='1';input.required=true;input.dataset.childAge='';input.name='childAge'+(i+1);input.inputMode='numeric';if(Number.isInteger(prev[i]))input.value=prev[i];input.addEventListener('input',()=>{message.textContent='';updateEstimate()});label.append(title,input);ageContainer.append(label);}}
   async function loadRates(){try{const response=await fetch(rateSource+'?t='+Date.now(),{cache:'no-store'});if(!response.ok)throw Error('No rates');const data=await response.json();rates=data.schemaVersion===1&&data.currency==='EUR'&&data.status==='active'&&data.days&&typeof data.days==='object'?data:null;}catch(e){rates=null;}updateEstimate();}
-  function quoteForStay(r){if(!rates)return null;const a=Number(adults.value),ages=childAges();if(ages.length!==Number(children.value)||ages.some(x=>!Number.isInteger(x)||x<0||x>17)||a<1||a+ages.length>capacity)return null;let total=0;for(let t=r.a.getTime();t<r.b.getTime();t+=86400000){const rule=rates.days[iso(new Date(t))];if(!rule||!rule.adultPrices||!rule.childExtras)return null;const base=rule.adultPrices[String(a)];if(typeof base!=='number'||!Number.isFinite(base)||base<0)return null;let nightly=base;for(const age of ages){const x=rule.childExtras[ageBand(age)];if(typeof x!=='number'||!Number.isFinite(x)||x<0)return null;nightly+=x;}total+=Math.round(nightly*100)/100;}return {total:Math.round(total*100)/100};}
+  function quoteForStay(r){
+    if(!rates)return null;
+    const a=Number(adults.value),ages=childAges();
+    if(ages.length!==Number(children.value)||ages.some(x=>!Number.isInteger(x)||x<0||x>17)||a<1||a>maxAdults||ages.length>maxChildren||a+ages.length>capacity)return null;
+    // Four-adult pricing is deliberately not inferred: its policy is pending.
+    if(a===4)return null;
+    let total=0;
+    for(let t=r.a.getTime();t<r.b.getTime();t+=86400000){
+      const day=iso(new Date(t)),rule=rates.days[day];
+      if(!rule)return null;
+      const base=rule.baseTwoAdults;
+      if(typeof base!=='number'||!Number.isFinite(base)||base<0)return null;
+      const factor=a===1?.90:a===2?1:1.16;
+      const nightly=Math.round((base*factor+ages.filter(age=>age>=12).length*9)*100)/100;
+      total+=nightly;
+    }
+    return {total:Math.round(total*100)/100};
+  }
   const message=form.querySelector('[data-direct-status]');
   const estimate=form.querySelector('[data-direct-estimate]');
   let calendar=null,checkedAt=0;
@@ -79,8 +98,8 @@
     const r=datesValid();
     if(!r){say('Επίλεξε έγκυρες ημερομηνίες άφιξης και αναχώρησης στο πεδίο ακριβώς από πάνω.','Choose valid check-in and check-out dates above.');return;}
     const adultsNo=Number(adults.value),kids=Number(children.value);
-    if(!Number.isInteger(adultsNo)||!Number.isInteger(kids)||adultsNo<1||kids<0||adultsNo+kids>capacity){
-      say('Το κατάλυμα δέχεται έως '+capacity+' άτομα συνολικά.','This property accommodates up to '+capacity+' guests in total.');return;
+    if(!Number.isInteger(adultsNo)||!Number.isInteger(kids)||adultsNo<1||adultsNo>maxAdults||kids<0||kids>maxChildren||adultsNo+kids>capacity){
+      say('Επιτρεπτά: έως '+maxAdults+' ενήλικες, '+maxChildren+' παιδιά και '+capacity+' επισκέπτες συνολικά.','Limits: '+maxAdults+' adults, '+maxChildren+' children, '+capacity+' guests total.');return;
     }
     const ages=childAges();
     if(ages.length!==kids||ages.some(a=>!Number.isInteger(a)||a<0||a>17)){say('Συμπλήρωσε την ηλικία κάθε παιδιού (0–17).','Enter each child age (0–17).');return;}
