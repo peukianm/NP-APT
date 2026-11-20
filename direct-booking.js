@@ -143,41 +143,56 @@ next.addEventListener('click',()=>{
   const first=details.querySelector('[name="firstname"]');if(first)first.focus({preventScroll:true});
   details.scrollIntoView({behavior:'smooth',block:'nearest'});
 });
+// Email delivery requires a deployed server endpoint with Gmail OAuth / Apps Script authorization.
+// Never show the success dialog on mere button click or on a failed request.
+const dialog=document.getElementById('booking-contact-dialog');
+const closeDialog=dialog?.querySelector('[data-close-booking-dialog]');
+if(closeDialog)closeDialog.addEventListener('click',()=>dialog.close());
+const emailEndpoint=typeof window.TOGETHER_HOME_BOOKING_EMAIL_ENDPOINT==='string'
+  ? window.TOGETHER_HOME_BOOKING_EMAIL_ENDPOINT.trim() : '';
+// No endpoint is configured yet. Do not allow sending an unsent request.
+send.disabled=!/^https:\/\//.test(emailEndpoint);
+if(!send.disabled){
+  const note=form.querySelector('.direct-clarifier.lang-el');
+  if(note)note.textContent='Με την υποβολή θα σταλεί email στον οικοδεσπότη. Το κατάλυμα θα επικοινωνήσει μαζί σας για την ολοκλήρωση της κράτησης.';
+  const noteEnglish=form.querySelector('.direct-clarifier.lang-en');
+  if(noteEnglish)noteEnglish.textContent='Submitting sends an email to the host. The property will contact you to finalize the booking.';
+}
 form.addEventListener('submit',async event=>{
   event.preventDefault();
-  if(!active||next.disabled){say('Πάτησε πρώτα «Υπολογισμός κόστους» και βεβαιώσου ότι εμφανίστηκε έγκυρο ποσό.','Calculate the cost first and ensure a valid total is displayed.');return;}
-  if(!form.reportValidity())return;
+  if(send.disabled||!emailEndpoint){say('Η αποστολή αιτημάτων μέσω email δεν έχει ενεργοποιηθεί ακόμη. Παρακαλούμε επικοινωνήστε απευθείας μαζί μας.','Email requests have not been activated yet. Please contact the property directly.');return;}
+  if(!active||next.disabled||details.hidden||!form.reportValidity())return;
   const guest=validGuests(),s=stay();
-  if(!guest||!s){reset();return;}
-  const fingerprint=[start.value,end.value,adults.value,children.value,guest.list.join(',')].join('|');
-  if(fingerprint!==active.fingerprint){reset();say('Τα στοιχεία άλλαξαν. Υπολόγισε ξανά το κόστος.','Details changed. Calculate the cost again.');return;}
-  const mobile=form.elements.mobile.value.replace(/[\s()\-]/g,'');
-  if(!/^\+?[0-9]{10,15}$/.test(mobile)){say('Συμπλήρωσε έγκυρο κινητό 10–15 ψηφίων.','Enter a valid mobile number, 10–15 digits.');return;}
-  send.disabled=true;say('Επανελέγχουμε την τιμή και τη διαθεσιμότητα…','Rechecking price and availability…');
+  if(!guest||!s)return;
+  const fp=[start.value,end.value,adults.value,children.value,guest.list.join(',')].join('|');
+  if(fp!==active.fingerprint){reset();say('Τα στοιχεία άλλαξαν. Υπολόγισε ξανά το κόστος.','Details changed. Please calculate again.');return;}
+  const mobile=form.elements.mobile.value.replace(/[\\s()\\-]/g,'');
+  if(!/^\\+?[0-9]{10,15}$/.test(mobile)){say('Συμπλήρωσε έγκυρο κινητό τηλέφωνο.','Enter a valid mobile number.');return;}
+  send.disabled=true;
+  say('Ελέγχουμε ξανά τη διαθεσιμότητα και υποβάλλουμε το αίτημα…','Rechecking availability and submitting your request…');
   try{
     const latest=await getOffer();
     if(!latest)return;
-    if(latest.amount!==active.amount){active=latest;details.hidden=true;displayOffer(latest);say('Η τιμή άλλαξε. Έλεγξε το νέο ποσό και πάτησε ξανά «Κράτηση».','The price has changed. Review the new total and press Book now again.');return;}
-    const lines=[
-      'ΑΙΤΗΜΑ ΚΡΑΤΗΣΗΣ / BOOKING REQUEST (NOT CONFIRMED)',
-      'Κατάλυμα / Property: '+property,
-      'Ονοματεπώνυμο / Guest: '+form.elements.firstname.value.trim()+' '+form.elements.lastname.value.trim(),
-      'Κινητό / Mobile: '+mobile,
-      'Άφιξη / Check-in: '+start.value,
-      'Αναχώρηση / Check-out: '+end.value,
-      'Διανυκτερεύσεις / Nights: '+s.nights,
-      'Ενήλικες / Adults: '+guest.a,
-      'Παιδιά / Children: '+guest.kids,
-      'Ηλικίες παιδιών / Ages: '+(guest.list.join(', ')||'-'),
-      'Συνολικό ενδεικτικό ποσό / Indicative total: '+latest.amount.toFixed(2)+' EUR',
-      'Παρακαλώ επιβεβαιώστε διαθεσιμότητα, τιμή και τρόπο πληρωμής.',
-      'Please confirm availability, rate and payment method.'
-    ];
-    const url='https://wa.me/306974483266?text='+encodeURIComponent(lines.join('\n'));
-    say('Άνοιγμα WhatsApp: πάτησε «Αποστολή» για να σταλεί το αίτημα. Δεν έχει γίνει ακόμη κράτηση ή αποστολή email.','Opening WhatsApp: press Send to submit your request. No confirmed booking or email has been sent.');
-    window.location.assign(url);
-  }catch(e){
-    say('Δεν είναι δυνατή η επαλήθευση. Η αίτηση δεν στάλθηκε. Δοκίμασε ξανά αργότερα.','Could not verify your request. Nothing was sent. Please retry.');
+    if(latest.amount!==active.amount){active=latest;details.hidden=true;displayOffer(latest);say('Η τιμή άλλαξε. Επιβεβαίωσε ξανά το νέο ποσό.','The price has changed. Please review the new total.');return;}
+    const payload={
+      property,firstName:form.elements.firstname.value.trim(),lastName:form.elements.lastname.value.trim(),
+      mobile,checkin:start.value,checkout:end.value,nights:s.nights,
+      adults:guest.a,children:guest.kids,childAges:guest.list,quotedTotal:latest.amount,
+      currency:'EUR',website:location.origin
+    };
+    const response=await fetch(emailEndpoint,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload),mode:'cors',cache:'no-store'
+    });
+    if(!response.ok)throw Error('Email service rejected request');
+    const result=await response.json();
+    if(result.success!==true)throw Error('Email not confirmed');
+    status.textContent='';
+    if(dialog&&typeof dialog.showModal==='function')dialog.showModal();
+    else say('Το αίτημα εστάλη και το κατάλυμα θα επικοινωνήσει μαζί σας.','The request was sent and the property will contact you.');
+    active=null;next.disabled=true;details.hidden=true;
+  }catch(error){
+    say('Δεν επιβεβαιώθηκε η αποστολή του email. Το αίτημα ΔΕΝ έχει καταχωριστεί. Δοκιμάστε ξανά ή επικοινωνήστε μαζί μας.','Email delivery could not be confirmed. Your request was NOT recorded. Please try again or contact us.');
   }finally{send.disabled=false;}
 });
 })();
