@@ -31,7 +31,7 @@
     const a=parse(start.value),b=parse(end.value);
     if(!a||!b||a<today()||b<=a)return null;
     const nights=Math.round((b-a)/86400000);
-    if(nights>240)return null;
+    if(nights>59)return null;
     return {a,b,nights};
   }
   function updateEstimate(){
