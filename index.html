@@ -354,6 +354,25 @@ justify-content:center;
 .direct-booking-actions{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:12px;margin:16px 0}
 .direct-booking-actions>.direct-send{display:flex;align-items:center;justify-content:center;width:100%;min-width:0;margin:0;padding:12px 14px;text-align:center;white-space:normal;overflow-wrap:anywhere;line-height:1.4}
 
+
+/* Compact typography within availability and booking. */
+#availability{font-size:.875rem;line-height:1.4}
+#availability .section-title h2{font-size:1.5rem;line-height:1.25}
+#availability .booking-calendar-title{font-size:1rem;line-height:1.3}
+#availability .direct-request-panel h3{font-size:1.125rem;line-height:1.3;margin-bottom:10px}
+#availability .date-search-panel>p,#availability .direct-request-panel p{line-height:1.4}
+#availability .date-search-panel>p{margin-bottom:10px}
+#availability .date-search-form label,#availability .direct-request-fields label,#availability .direct-child-ages label{font-size:.875rem;line-height:1.3;gap:5px}
+#availability input,#availability select,#availability .direct-send,#availability .booking-action{font-size:.875rem;line-height:1.3}
+#availability .direct-booking-promo{line-height:1.4;margin:10px 0 12px;padding:10px 12px}
+#availability .direct-quote-result{font-size:1rem;line-height:1.4;padding:14px}
+#availability .direct-guest-count,#availability .direct-consent{font-size:.8125rem;line-height:1.35}
+#availability .availability-booking-platforms>p{line-height:1.3}
+#availability .avail-toolbar strong{font-size:1.0625rem;line-height:1.25}
+#availability .avail-day,#availability .avail-weekday,#availability .avail-empty{font-size:.75rem;line-height:1.2}
+#availability .avail-status,#availability .avail-footnote{line-height:1.35}
+@media(max-width:700px){#availability .section-title h2{font-size:1.25rem}#availability .avail-toolbar strong{font-size:1rem}}
+
 </style>
 
 <link rel="canonical" href="https://np.together-home.gr/">
