@@ -20,6 +20,7 @@ const details=form.querySelector('[data-guest-details]');
 const estimate=form.querySelector('[data-direct-estimate]');
 const status=form.querySelector('[data-direct-status]');
 const send=form.querySelector('button[type="submit"]');
+let captchaToken='',captchaWidgetId=null;
 const en=()=>document.documentElement.lang==='en';
 const tr=(el,english)=>en()?english:el;
 const money=x=>new Intl.NumberFormat(en()?'en-GB':'el-GR',{style:'currency',currency:'EUR'}).format(x);
@@ -62,6 +63,8 @@ function reset(){
   summary.hidden=true;summary.textContent='';
   next.disabled=true;next.setAttribute("aria-disabled","true");details.hidden=true;
   status.textContent='';
+  captchaToken='';send.disabled=true;
+  if(captchaWidgetId!==null&&window.turnstile)try{window.turnstile.reset(captchaWidgetId);}catch(e){}
   estimate.textContent=tr('Επίλεξε ημερομηνίες και επισκέπτες και πάτησε «Υπολογισμός κόστους».','Choose dates and guests, then press Calculate cost.');
 }
 async function json(url){
@@ -140,6 +143,7 @@ calculate.addEventListener('click',async()=>{
 next.addEventListener('click',()=>{
   if(!active||next.disabled)return;
   details.hidden=false;next.hidden=true;status.textContent='';
+  prepareCaptcha();
   const first=details.querySelector('[name="firstname"]');if(first)first.focus({preventScroll:true});
   details.scrollIntoView({behavior:'smooth',block:'nearest'});
 });
@@ -150,9 +154,29 @@ const closeDialog=dialog?.querySelector('[data-close-booking-dialog]');
 if(closeDialog)closeDialog.addEventListener('click',()=>dialog.close());
 const emailEndpoint=typeof window.TOGETHER_HOME_BOOKING_EMAIL_ENDPOINT==='string'
   ? window.TOGETHER_HOME_BOOKING_EMAIL_ENDPOINT.trim() : '';
-// No endpoint is configured yet. Do not allow sending an unsent request.
-send.disabled=!/^https:\/\//.test(emailEndpoint);
-if(!send.disabled){
+const turnstileSiteKey=typeof window.TOGETHER_HOME_TURNSTILE_SITE_KEY==='string'
+  ? window.TOGETHER_HOME_TURNSTILE_SITE_KEY.trim() : '';
+const emailReady=/^https:\/\//.test(emailEndpoint)&&Boolean(turnstileSiteKey);
+send.disabled=true;
+let captchaHolder=null;
+function prepareCaptcha(){
+  if(!emailReady)return;
+  if(!captchaHolder){captchaHolder=document.createElement('div');captchaHolder.className='direct-captcha';details.insertBefore(captchaHolder,send);}
+  const render=()=>{
+    if(!window.turnstile||captchaWidgetId!==null||details.hidden)return;
+    captchaWidgetId=window.turnstile.render(captchaHolder,{
+      sitekey:turnstileSiteKey,
+      callback:token=>{captchaToken=token;send.disabled=false;},
+      'expired-callback':()=>{captchaToken='';send.disabled=true;},
+      'error-callback':()=>{captchaToken='';send.disabled=true;say('Δεν ολοκληρώθηκε ο έλεγχος ασφαλείας. Δοκίμασε ξανά.','Security verification failed. Please try again.');}
+    });
+  };
+  if(window.turnstile){render();return;}
+  let sdk=document.querySelector('[data-booking-turnstile-sdk]');
+  if(!sdk){sdk=document.createElement('script');sdk.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';sdk.async=true;sdk.dataset.bookingTurnstileSdk='';document.head.appendChild(sdk);}
+  sdk.addEventListener('load',render,{once:true});
+}
+if(emailReady){
   const note=form.querySelector('.direct-clarifier.lang-el');
   if(note)note.textContent='Με την υποβολή θα σταλεί email στον οικοδεσπότη. Το κατάλυμα θα επικοινωνήσει μαζί σας για την ολοκλήρωση της κράτησης.';
   const noteEnglish=form.querySelector('.direct-clarifier.lang-en');
@@ -160,7 +184,7 @@ if(!send.disabled){
 }
 form.addEventListener('submit',async event=>{
   event.preventDefault();
-  if(send.disabled||!emailEndpoint){say('Η αποστολή αιτημάτων μέσω email δεν έχει ενεργοποιηθεί ακόμη. Παρακαλούμε επικοινωνήστε απευθείας μαζί μας.','Email requests have not been activated yet. Please contact the property directly.');return;}
+  if(send.disabled||!emailReady||!captchaToken){say('Η αποστολή αιτημάτων μέσω email δεν έχει ενεργοποιηθεί ακόμη. Παρακαλούμε επικοινωνήστε απευθείας μαζί μας.','Email requests have not been activated yet. Please contact the property directly.');return;}
   if(!active||next.disabled||details.hidden||!form.reportValidity())return;
   const guest=validGuests(),s=stay();
   if(!guest||!s)return;
@@ -178,7 +202,7 @@ form.addEventListener('submit',async event=>{
       property,firstName:form.elements.firstname.value.trim(),lastName:form.elements.lastname.value.trim(),
       mobile,checkin:start.value,checkout:end.value,nights:s.nights,
       adults:guest.a,children:guest.kids,childAges:guest.list,quotedTotal:latest.amount,
-      currency:'EUR',website:location.origin
+      currency:'EUR',website:location.origin,turnstileToken:captchaToken
     };
     const response=await fetch(emailEndpoint,{
       method:'POST',headers:{'Content-Type':'application/json'},
@@ -193,6 +217,9 @@ form.addEventListener('submit',async event=>{
     active=null;next.disabled=true;details.hidden=true;
   }catch(error){
     say('Δεν επιβεβαιώθηκε η αποστολή του email. Το αίτημα ΔΕΝ έχει καταχωριστεί. Δοκιμάστε ξανά ή επικοινωνήστε μαζί μας.','Email delivery could not be confirmed. Your request was NOT recorded. Please try again or contact us.');
-  }finally{send.disabled=false;}
+  }finally{
+    captchaToken='';send.disabled=true;
+    if(captchaWidgetId!==null&&window.turnstile)try{window.turnstile.reset(captchaWidgetId);}catch(e){}
+  }
 });
 })();
