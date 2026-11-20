@@ -2,23 +2,22 @@
   "schemaVersion": 1,
   "currency": "EUR",
   "status": "unconfigured",
-  "description": "Public rate rules; edit using private local rate manager. Prices are not active until status=active and every needed date has a complete rule.",
-  "ageBands": [
-    {
-      "key": "infant",
-      "min": 0,
-      "max": 2
-    },
-    {
-      "key": "child",
-      "min": 3,
-      "max": 11
-    },
-    {
-      "key": "teen",
-      "min": 12,
-      "max": 17
-    }
-  ],
-  "days": {}
+  "description": "Base price for two adults for each date. One adult -10%; three adults +16%; four adults GP-Apt +22%. Children 0-11 free; ages 12-17 +9 EUR per child per night. Total max 4 guests.",
+  "days": {},
+  "rateModel": "two_adults_base_v1",
+  "adultMultipliers": {
+    "1": 0.9,
+    "2": 1,
+    "3": 1.16,
+    "4": null
+  },
+  "childPerNight": {
+    "0-11": 0,
+    "12-17": 9
+  },
+  "capacity": {
+    "maxAdults": 3,
+    "maxChildren": 2,
+    "maxTotal": 4
+  }
 }
