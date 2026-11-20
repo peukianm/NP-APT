@@ -25,15 +25,14 @@
     if(!rates)return null;
     const a=Number(adults.value),ages=childAges();
     if(ages.length!==Number(children.value)||ages.some(x=>!Number.isInteger(x)||x<0||x>17)||a<1||a>maxAdults||ages.length>maxChildren||a+ages.length>capacity)return null;
-    // Four-adult pricing is deliberately not inferred: its policy is pending.
-    if(a===4)return null;
+    // Four adults are allowed only at GP-Apt, at +22% vs two-adult base.
     let total=0;
     for(let t=r.a.getTime();t<r.b.getTime();t+=86400000){
       const day=iso(new Date(t)),rule=rates.days[day];
       if(!rule)return null;
       const base=rule.baseTwoAdults;
       if(typeof base!=='number'||!Number.isFinite(base)||base<0)return null;
-      const factor=a===1?.90:a===2?1:1.16;
+      const factor=a===1?.90:a===2?1:a===3?1.16:1.22;
       const nightly=Math.round((base*factor+ages.filter(age=>age>=12).length*9)*100)/100;
       total+=nightly;
     }
