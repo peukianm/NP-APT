@@ -36,7 +36,7 @@
   }
   function updateEstimate(){
     const r=datesValid();
-    estimate.textContent=r?tr(r.nights+' διανυκτερεύσεις · Η τελική τιμή θα επιβεβαιωθεί από τον οικοδεσπότη. Ζήτησε την απευθείας προσφορά μας.',r.nights+' nights · The host will confirm the final price. Ask for our direct-booking offer.'):tr('Επίλεξε ημερομηνίες για να εμφανιστεί η διάρκεια διαμονής.','Select dates to see your stay length.');
+    estimate.textContent=r?tr(r.nights+' διανυκτερεύσεις · Οι απευθείας κρατήσεις προσφέρονται σε καλύτερες τιμές από τις πλατφόρμες. Η τελική προσφορά επιβεβαιώνεται από τον οικοδεσπότη.',r.nights+' nights · Direct bookings offer better rates than booking platforms. The host will confirm the final quote.'):tr('Επίλεξε ημερομηνίες για να εμφανιστεί η διάρκεια διαμονής.','Select dates to see your stay length.');
   }
   async function loadCalendar(){
     const response=await fetch(source+'?t='+Date.now(),{cache:'no-store'});
@@ -99,8 +99,8 @@
         'Nights / Διανυκτερεύσεις: '+r.nights,
         'Adults / Ενήλικες: '+adultsNo,
         'Children / Παιδιά: '+kids,
-        'Request: Please confirm availability and send your best direct-booking price.',
-        'Αίτημα: Επιβεβαίωση διαθεσιμότητας και αποστολή καλύτερης τιμής απευθείας κράτησης.',
+        'Request: Please confirm availability and send your better direct-booking rate.',
+        'Αίτημα: Επιβεβαίωση διαθεσιμότητας και αποστολή καλύτερης τιμής μέσω του site.',
         'Status / Κατάσταση: NOT CONFIRMED – payment instructions after host approval.'
       ];
       const url='https://wa.me/306974483266?text='+encodeURIComponent(lines.join('\n'));
