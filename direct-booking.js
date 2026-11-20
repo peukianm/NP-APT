@@ -1,4 +1,4 @@
-/* Two-step, non-binding booking inquiry: estimate -> book -> WhatsApp.
+/* Two-step, non-binding booking inquiry: estimate -> book -> verified email.
  * Never treats iCal as live inventory or claims that email was sent. */
 (function(){
 'use strict';
@@ -166,8 +166,8 @@ form.addEventListener('submit',async event=>{
   if(!guest||!s)return;
   const fp=[start.value,end.value,adults.value,children.value,guest.list.join(',')].join('|');
   if(fp!==active.fingerprint){reset();say('Τα στοιχεία άλλαξαν. Υπολόγισε ξανά το κόστος.','Details changed. Please calculate again.');return;}
-  const mobile=form.elements.mobile.value.replace(/[\\s()\\-]/g,'');
-  if(!/^\\+?[0-9]{10,15}$/.test(mobile)){say('Συμπλήρωσε έγκυρο κινητό τηλέφωνο.','Enter a valid mobile number.');return;}
+  const mobile=form.elements.mobile.value.replace(/[\s()\-]/g,'');
+  if(!/^\+?[0-9]{10,15}$/.test(mobile)){say('Συμπλήρωσε έγκυρο κινητό τηλέφωνο.','Enter a valid mobile number.');return;}
   send.disabled=true;
   say('Ελέγχουμε ξανά τη διαθεσιμότητα και υποβάλλουμε το αίτημα…','Rechecking availability and submitting your request…');
   try{
