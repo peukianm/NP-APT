@@ -11,8 +11,8 @@ const maxAdults=repo==='NP-APT'?3:4;
 const maxChildren=repo==='NP-APT'?2:3;
 const maxTotal=4;
 const start=dates.querySelector('[name="checkin"]'),end=dates.querySelector('[name="checkout"]');
-const adults=form.elements.adults,children=form.elements.children;
-const agesContainer=form.querySelector('[data-child-ages]');
+const adults=dates.elements.adults,children=dates.elements.children;
+const agesContainer=dates.querySelector('[data-child-ages]');
 const calculate=form.querySelector('[data-calculate-cost]');
 const next=form.querySelector('[data-next-booking]');
 const summary=form.querySelector('[data-quote-result]');
@@ -61,7 +61,7 @@ function renderAges(){
 function reset(){
   active=null;
   summary.hidden=true;summary.textContent='';
-  next.disabled=true;next.setAttribute("aria-disabled","true");details.hidden=true;
+  next.disabled=true;next.hidden=false;next.setAttribute("aria-disabled","true");details.hidden=true;
   status.textContent='';
   captchaToken='';send.disabled=true;
   if(captchaWidgetId!==null&&window.turnstile)try{window.turnstile.reset(captchaWidgetId);}catch(e){}
@@ -122,7 +122,7 @@ async function getOffer(){
 function displayOffer(offer){
   const {nights,amount,guest}=offer;
   summary.textContent=tr('Σύνολο διαμονής: '+money(amount)+' · '+nights.nights+' διανυκτερεύσεις · '+guest.a+' ενήλικες · '+guest.kids+' παιδιά. Η κράτηση επιβεβαιώνεται από τον οικοδεσπότη.','Stay total: '+money(amount)+' · '+nights.nights+' nights · '+guest.a+' adults · '+guest.kids+' children. The host must confirm the booking.');
-  summary.hidden=false;next.disabled=false;next.setAttribute("aria-disabled","false");
+  summary.hidden=false;next.disabled=false;next.hidden=false;next.setAttribute("aria-disabled","false");
   estimate.textContent=tr('Ενδεικτική τιμή μέσω site, χωρίς αυτόματη δέσμευση ημερομηνιών.','Indicative website rate; dates are not automatically reserved.');
   summary.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
@@ -153,11 +153,7 @@ function syncGuestCounts(changed){
     'Σύνολο επισκεπτών: '+chosen+' / '+maxTotal+' · Τουλάχιστον 1 ενήλικος.'+(adjusted?' Οι επιλογές προσαρμόστηκαν στο όριο χωρητικότητας.':''),
     'Total guests: '+chosen+' / '+maxTotal+' · At least 1 adult required.'+(adjusted?' The selections were adjusted to the occupancy limit.':'')
   );
-  const platformGuests=dates.querySelector('[name="guests"]');
-  if(platformGuests&&platformGuests.value!==String(chosen)){
-    platformGuests.value=String(chosen);
-    platformGuests.dispatchEvent(new Event('change',{bubbles:true}));
-  }
+  dates.dispatchEvent(new Event('booking-guests-change',{bubbles:true}));
 }
 adults.addEventListener('change',()=>syncGuestCounts('adults'));
 children.addEventListener('change',()=>syncGuestCounts('children'));
