@@ -60,7 +60,7 @@ function renderAges(){
 function reset(){
   active=null;
   summary.hidden=true;summary.textContent='';
-  next.hidden=true;details.hidden=true;
+  next.disabled=true;next.setAttribute("aria-disabled","true");details.hidden=true;
   status.textContent='';
   estimate.textContent=tr('Επίλεξε ημερομηνίες και επισκέπτες και πάτησε «Υπολογισμός κόστους».','Choose dates and guests, then press Calculate cost.');
 }
@@ -78,7 +78,7 @@ async function currentRates(){
   }catch(e){
     data=await json('https://raw.githubusercontent.com/peukianm/'+repo+'/main/rates.json?ts='+Date.now());
   }
-  if(data.schemaVersion!==1||data.currency!=='EUR'||data.status!=='active'||!data.days||typeof data.days!=='object')throw Error('Rates not configured');
+  if(data.schemaVersion!==1||data.currency!=='EUR'||data.status!=='active'||!data.days||typeof data.days!=='object')throw Error('NO_PRICING');
   return data;
 }
 async function currentAvailability(){
@@ -113,13 +113,13 @@ async function getOffer(){
   const [rateData,calendar]=await Promise.all([currentRates(),currentAvailability()]);
   ensureNoBlocked(nights,calendar);
   const amount=price(nights,guest,rateData);
-  if(amount===null){say('Δεν έχει οριστεί τιμή για όλες τις ημερομηνίες. Επικοινώνησε μαζί μας για προσφορά.','Prices are not available for every selected date. Contact us for a quote.');return null;}
+  if(amount===null){say('Πληροφορίες σχετικά με την τιμολόγηση δεν είναι διαθέσιμες για τις συγκεκριμένες ημερομηνίες.','Pricing information is not available for the selected dates.');return null;}
   return {nights,guest,amount,fingerprint:[start.value,end.value,adults.value,children.value,guest.list.join(',')].join('|')};
 }
 function displayOffer(offer){
   const {nights,amount,guest}=offer;
   summary.textContent=tr('Σύνολο διαμονής: '+money(amount)+' · '+nights.nights+' διανυκτερεύσεις · '+guest.a+' ενήλικες · '+guest.kids+' παιδιά. Η κράτηση επιβεβαιώνεται από τον οικοδεσπότη.','Stay total: '+money(amount)+' · '+nights.nights+' nights · '+guest.a+' adults · '+guest.kids+' children. The host must confirm the booking.');
-  summary.hidden=false;next.hidden=false;
+  summary.hidden=false;next.disabled=false;next.setAttribute("aria-disabled","false");
   estimate.textContent=tr('Ενδεικτική τιμή μέσω site, χωρίς αυτόματη δέσμευση ημερομηνιών.','Indicative website rate; dates are not automatically reserved.');
   summary.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
@@ -133,18 +133,19 @@ calculate.addEventListener('click',async()=>{
     const offer=await getOffer();
     if(offer){active=offer;status.textContent='';displayOffer(offer);}
   }catch(e){
-    say('Ο υπολογισμός δεν ολοκληρώθηκε. Έλεγξε αν έχουν δημοσιευτεί οι τιμές και αν το ημερολόγιο είναι ενημερωμένο.','Cannot calculate right now. Check published rates and calendar freshness.');
+    if(e&&e.message==='NO_PRICING'){say('Πληροφορίες σχετικά με την τιμολόγηση δεν είναι διαθέσιμες για τις συγκεκριμένες ημερομηνίες.','Pricing information is not available for the selected dates.');}
+    else{say('Ο υπολογισμός δεν ολοκληρώθηκε. Έλεγξε αν έχουν δημοσιευτεί οι τιμές και αν το ημερολόγιο είναι ενημερωμένο.','Cannot calculate right now. Check published rates and calendar freshness.');}
   }finally{calculate.disabled=false;}
 });
 next.addEventListener('click',()=>{
-  if(!active)return;
+  if(!active||next.disabled)return;
   details.hidden=false;next.hidden=true;status.textContent='';
   const first=details.querySelector('[name="firstname"]');if(first)first.focus({preventScroll:true});
   details.scrollIntoView({behavior:'smooth',block:'nearest'});
 });
 form.addEventListener('submit',async event=>{
   event.preventDefault();
-  if(!active){say('Πάτησε πρώτα «Υπολογισμός κόστους».','Calculate the cost first.');return;}
+  if(!active||next.disabled){say('Πάτησε πρώτα «Υπολογισμός κόστους» και βεβαιώσου ότι εμφανίστηκε έγκυρο ποσό.','Calculate the cost first and ensure a valid total is displayed.');return;}
   if(!form.reportValidity())return;
   const guest=validGuests(),s=stay();
   if(!guest||!s){reset();return;}
