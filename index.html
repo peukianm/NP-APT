@@ -315,6 +315,17 @@ justify-content:center;
 
 .booking-contact-dialog{max-width:min(520px,calc(100vw - 32px));box-sizing:border-box;border:2px solid #d4af37;border-radius:15px;padding:24px;background:#202525;color:#fff;box-shadow:0 20px 50px rgba(0,0,0,.4)}.booking-contact-dialog::backdrop{background:rgba(0,0,0,.65)}.booking-contact-dialog h3{color:#f2ce70;font-size:1.4rem}.booking-contact-dialog p{line-height:1.6}.direct-send:disabled{background:#7b7b7b!important;color:#eee!important;cursor:not-allowed;opacity:.7}
 .direct-guest-count{grid-column:1/-1;margin:0;padding:9px 12px;border-radius:8px;background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.4);color:#f7e6b3;font-size:14px;line-height:1.5}
+
+/* Unified dates + guest selection card */
+#date-search-form{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;align-items:end}
+#date-search-form > label{min-width:0}
+#date-search-form .direct-child-ages{grid-column:1/-1;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:2px}
+#date-search-form .direct-child-ages:empty{display:none}
+#date-search-form .direct-guest-count{grid-column:1/-1;margin:0}
+#date-search-form .date-search-actions{grid-column:1/-1;display:flex;justify-content:flex-end;gap:12px;padding-top:6px}
+#date-search-form .date-search-actions .booking-action{min-width:126px;text-align:center}
+@media(max-width:920px){#date-search-form{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){#date-search-form{grid-template-columns:1fr}#date-search-form .direct-child-ages{grid-template-columns:1fr}#date-search-form .date-search-actions{flex-direction:column}#date-search-form .date-search-actions .booking-action{width:100%;box-sizing:border-box}}
 </style>
 
 <link rel="canonical" href="https://np.together-home.gr/">
@@ -851,7 +862,7 @@ Perfect all year round.
 
 
   
-<section class="section" id="availability"><div class="availability-visual" id="public-availability-calendar" aria-label="Indicative booking availability"><div class="avail-toolbar"><button type="button" data-prev aria-label="Previous month">‹</button><strong data-month>—</strong><button type="button" data-next aria-label="Next month">›</button></div><div class="avail-days" data-days aria-live="polite"></div><div class="avail-legend"><span class="avail-legend-item"><i class="avail-blocked"></i><span class="lang-el">Δεσμευμένη</span><span class="lang-en hidden">Blocked</span></span><span class="avail-legend-item"><i class="avail-tentative"></i><span class="lang-el">Χωρίς γνωστή δέσμευση*</span><span class="lang-en hidden">No reported block*</span></span><span class="avail-legend-item"><i class="avail-unknown"></i><span class="lang-el">Μη επιβεβαιωμένο</span><span class="lang-en hidden">Unverified</span></span></div><p class="avail-status" data-status role="status"></p><p class="avail-footnote lang-el"><strong>Σημαντική ενημέρωση:</strong> *Οι πληροφορίες διαθεσιμότητας του ημερολογίου παρέχονται αποκλειστικά για ενημερωτικούς σκοπούς και ενδέχεται να μην είναι πλήρως ενημερωμένες λόγω καθυστερήσεων συγχρονισμού ή μεταβολών στις κρατήσεις. Για την πιο αξιόπιστη και επικαιροποιημένη ενημέρωση σχετικά με τη διαθεσιμότητα και τις τιμές του καταλύματος, παρακαλούμε συμβουλευτείτε απευθείας τις πλατφόρμες Booking.com και Airbnb πριν από την κράτησή σας.</p><p class="avail-footnote lang-en hidden"><strong>Important notice:</strong> *Calendar availability is provided for informational purposes only and may not always be fully up to date due to synchronization delays or changes in reservations. For the most reliable and current information on availability and rates, please check the property’s Booking.com or Airbnb listing directly before making a reservation.</p></div><div class="section-title"><h2 class="lang-el">Έλεγχος ημερομηνιών & κρατήσεις</h2><h2 class="lang-en hidden">Check dates & book</h2></div><div class="date-search-panel"><p class="lang-el">Επίλεξε ημερομηνίες και επισκέπτες και συνέχισε στην πλατφόρμα της επιλογής σου. Η τελική διαθεσιμότητα και τιμή επιβεβαιώνονται εκεί.</p><p class="lang-en hidden">Choose dates and guests, then continue to the booking platform. Final availability and prices are confirmed there.</p><form class="date-search-form" id="date-search-form"><label><span class="lang-el">Άφιξη</span><span class="lang-en hidden">Check-in</span><input type="text" name="checkin" inputmode="numeric" autocomplete="off" placeholder="dd/mm/yyyy" maxlength="10" pattern="[0-9]{2}/[0-9]{2}/[0-9]{4}" aria-label="checkin (dd/mm/yyyy)" required></label><label><span class="lang-el">Αναχώρηση</span><span class="lang-en hidden">Check-out</span><input type="text" name="checkout" inputmode="numeric" autocomplete="off" placeholder="dd/mm/yyyy" maxlength="10" pattern="[0-9]{2}/[0-9]{2}/[0-9]{4}" aria-label="checkout (dd/mm/yyyy)" required></label><label><span class="lang-el">Επισκέπτες</span><span class="lang-en hidden">Guests</span><select name="guests"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option></select></label><div class="date-search-actions"><a class="booking-action" data-platform="booking" href="#" target="_blank" rel="noopener noreferrer">Booking.com ↗</a><a class="booking-action" data-platform="airbnb" href="#" target="_blank" rel="noopener noreferrer">Airbnb ↗</a></div></form><p class="date-search-message" role="status" aria-live="polite"></p><p class="date-disclaimer lang-el">Το ημερολόγιο επιλέγει ημερομηνίες· δεν συνδέεται απευθείας με το απόθεμα διαθεσιμότητας των πλατφορμών.</p><p class="date-disclaimer lang-en hidden">This date picker does not display live platform inventory.</p></div><div class="direct-request-panel" id="direct-booking"><h3 class="lang-el">Απευθείας κράτηση με καλύτερες τιμές</h3><h3 class="lang-en hidden">Better rates when booking directly</h3><p class="direct-booking-promo lang-el"><strong>Κλείνοντας απευθείας μέσω της ιστοσελίδας μας, απολαμβάνετε καλύτερες τιμές από τις πλατφόρμες κρατήσεων.</strong> Στείλτε μας το αίτημά σας για την τελική προσφορά.</p><p class="direct-booking-promo lang-en hidden"><strong>Book directly through our website for better rates than on booking platforms.</strong> Send us your request for a final quote.</p><p class="lang-el">Επίλεξε πρώτα άφιξη και αναχώρηση στην παραπάνω φόρμα. Έπειτα συμπλήρωσε τα στοιχεία σου για να στείλεις αίτημα μέσω WhatsApp. <strong>Δεν αποτελεί οριστική κράτηση:</strong> η διαθεσιμότητα, η τιμή και η πληρωμή επιβεβαιώνονται από τον οικοδεσπότη.</p><p class="lang-en hidden">Choose check-in and check-out above, then enter your details to send a request via WhatsApp. <strong>This is not a confirmed reservation:</strong> the host must verify availability, price and payment.</p><form id="direct-request-form" data-property="NP-Apt"><div class="direct-request-fields"><label><span class="lang-el">Ενήλικες *</span><span class="lang-en hidden">Adults *</span><select name="adults" required><option value="1" >1</option><option value="2" selected>2</option><option value="3" >3</option></select></label><label><span class="lang-el">Παιδιά *</span><span class="lang-en hidden">Children *</span><select name="children" required><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></label><div class="direct-child-ages" data-child-ages aria-live="polite"></div></div><button type="button" class="direct-send direct-calculate" data-calculate-cost><span class="lang-el">Υπολογισμός κόστους</span><span class="lang-en hidden">Calculate cost</span></button><div class="direct-quote-result" data-quote-result hidden role="status" aria-live="polite"></div><button type="button" class="direct-send direct-book-next" data-next-booking disabled aria-disabled="true"><span class="lang-el">Κράτηση</span><span class="lang-en hidden">Book now</span></button><p class="direct-estimate" data-direct-estimate aria-live="polite"></p><div class="direct-guest-details" data-guest-details hidden><div class="direct-request-fields"><label><span class="lang-el">Όνομα *</span><span class="lang-en hidden">First name *</span><input name="firstname" type="text" autocomplete="given-name" maxlength="70" required></label><label><span class="lang-el">Επώνυμο *</span><span class="lang-en hidden">Last name *</span><input name="lastname" type="text" autocomplete="family-name" maxlength="70" required></label><label><span class="lang-el">Κινητό τηλέφωνο *</span><span class="lang-en hidden">Mobile phone *</span><input name="mobile" type="tel" autocomplete="tel" inputmode="tel" maxlength="24" placeholder="+30 69..." required></label></div><label class="direct-consent"><input type="checkbox" required><span class="lang-el">Συμφωνώ να χρησιμοποιηθούν τα στοιχεία μου αποκλειστικά για την εξέταση του αιτήματος κράτησης και την επικοινωνία μαζί μου. *</span><span class="lang-en hidden">I agree that my details will be used only to process this booking request and contact me. *</span></label><button type="submit" class="direct-send" disabled><span class="lang-el">Υποβολή αιτήματος κράτησης</span><span class="lang-en hidden">Submit booking request</span></button></div><p class="direct-status" data-direct-status role="status" aria-live="polite"></p></form><dialog id="booking-contact-dialog" class="booking-contact-dialog" aria-labelledby="booking-contact-title"><h3 id="booking-contact-title" class="lang-el">Αίτημα κράτησης</h3><h3 class="lang-en hidden">Booking request</h3><p class="lang-el">Για να προχωρήσει το αίτημά σας, συμπληρώστε τα στοιχεία επικοινωνίας και πατήστε «Υποβολή αιτήματος κράτησης». <strong>Αφού λάβουμε το αίτημά σας, θα επικοινωνήσουμε μαζί σας από το κατάλυμα για την επιβεβαίωση και ολοκλήρωση της κράτησης.</strong> Το πάτημα «Κράτηση» δεν αποτελεί οριστική κράτηση.</p><p class="lang-en hidden">To proceed, enter your contact details and select “Submit booking request”. <strong>Once we receive your request, the property will contact you to confirm and finalize your reservation.</strong> Clicking “Book now” does not confirm a booking.</p><button type="button" data-close-booking-dialog class="direct-send"><span class="lang-el">Συνέχεια στη φόρμα</span><span class="lang-en hidden">Continue to form</span></button></dialog></div></section>
+<section class="section" id="availability"><div class="availability-visual" id="public-availability-calendar" aria-label="Indicative booking availability"><div class="avail-toolbar"><button type="button" data-prev aria-label="Previous month">‹</button><strong data-month>—</strong><button type="button" data-next aria-label="Next month">›</button></div><div class="avail-days" data-days aria-live="polite"></div><div class="avail-legend"><span class="avail-legend-item"><i class="avail-blocked"></i><span class="lang-el">Δεσμευμένη</span><span class="lang-en hidden">Blocked</span></span><span class="avail-legend-item"><i class="avail-tentative"></i><span class="lang-el">Χωρίς γνωστή δέσμευση*</span><span class="lang-en hidden">No reported block*</span></span><span class="avail-legend-item"><i class="avail-unknown"></i><span class="lang-el">Μη επιβεβαιωμένο</span><span class="lang-en hidden">Unverified</span></span></div><p class="avail-status" data-status role="status"></p><p class="avail-footnote lang-el"><strong>Σημαντική ενημέρωση:</strong> *Οι πληροφορίες διαθεσιμότητας του ημερολογίου παρέχονται αποκλειστικά για ενημερωτικούς σκοπούς και ενδέχεται να μην είναι πλήρως ενημερωμένες λόγω καθυστερήσεων συγχρονισμού ή μεταβολών στις κρατήσεις. Για την πιο αξιόπιστη και επικαιροποιημένη ενημέρωση σχετικά με τη διαθεσιμότητα και τις τιμές του καταλύματος, παρακαλούμε συμβουλευτείτε απευθείας τις πλατφόρμες Booking.com και Airbnb πριν από την κράτησή σας.</p><p class="avail-footnote lang-en hidden"><strong>Important notice:</strong> *Calendar availability is provided for informational purposes only and may not always be fully up to date due to synchronization delays or changes in reservations. For the most reliable and current information on availability and rates, please check the property’s Booking.com or Airbnb listing directly before making a reservation.</p></div><div class="section-title"><h2 class="lang-el">Έλεγχος ημερομηνιών & κρατήσεις</h2><h2 class="lang-en hidden">Check dates & book</h2></div><div class="date-search-panel"><p class="lang-el">Επίλεξε ημερομηνίες, ενήλικες και παιδιά. Για κράτηση μέσω πλατφόρμας, χρησιμοποίησε τα κουμπιά Booking.com ή Airbnb στο τέλος του πλαισίου.</p><p class="lang-en hidden">Choose dates, adults and children. To book through a platform, use the Booking.com or Airbnb buttons at the bottom of this box.</p><form class="date-search-form" id="date-search-form"><label><span class="lang-el">Άφιξη</span><span class="lang-en hidden">Check-in</span><input type="text" name="checkin" inputmode="numeric" autocomplete="off" placeholder="dd/mm/yyyy" maxlength="10" pattern="[0-9]{2}/[0-9]{2}/[0-9]{4}" aria-label="checkin (dd/mm/yyyy)" required></label><label><span class="lang-el">Αναχώρηση</span><span class="lang-en hidden">Check-out</span><input type="text" name="checkout" inputmode="numeric" autocomplete="off" placeholder="dd/mm/yyyy" maxlength="10" pattern="[0-9]{2}/[0-9]{2}/[0-9]{4}" aria-label="checkout (dd/mm/yyyy)" required></label><label><span class="lang-el">Ενήλικες *</span><span class="lang-en hidden">Adults *</span><select name="adults" required><option value="1" >1</option><option value="2" selected>2</option><option value="3" >3</option></select></label><label><span class="lang-el">Παιδιά *</span><span class="lang-en hidden">Children *</span><select name="children" required><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></label><div class="direct-child-ages" data-child-ages aria-live="polite"></div><div class="date-search-actions"><a class="booking-action" data-platform="booking" href="#" target="_blank" rel="noopener noreferrer">Booking.com ↗</a><a class="booking-action" data-platform="airbnb" href="#" target="_blank" rel="noopener noreferrer">Airbnb ↗</a></div></form><p class="date-search-message" role="status" aria-live="polite"></p><p class="date-disclaimer lang-el">Το ημερολόγιο επιλέγει ημερομηνίες· δεν συνδέεται απευθείας με το απόθεμα διαθεσιμότητας των πλατφορμών.</p><p class="date-disclaimer lang-en hidden">This date picker does not display live platform inventory.</p></div><div class="direct-request-panel" id="direct-booking"><h3 class="lang-el">Απευθείας κράτηση με καλύτερες τιμές</h3><h3 class="lang-en hidden">Better rates when booking directly</h3><p class="direct-booking-promo lang-el"><strong>Κλείνοντας απευθείας μέσω της ιστοσελίδας μας, απολαμβάνετε καλύτερες τιμές από τις πλατφόρμες κρατήσεων.</strong> Στείλτε μας το αίτημά σας για την τελική προσφορά.</p><p class="direct-booking-promo lang-en hidden"><strong>Book directly through our website for better rates than on booking platforms.</strong> Send us your request for a final quote.</p><p class="lang-el">Επίλεξε ημερομηνίες και επισκέπτες στο ενιαίο πλαίσιο παραπάνω. Πάτησε «Υπολογισμός κόστους» και, εφόσον υπάρχει τιμή, συνέχισε με «Κράτηση». <strong>Η κράτηση οριστικοποιείται μόνο μετά την επιβεβαίωση από το κατάλυμα.</strong></p><p class="lang-en hidden">Choose dates and guests in the box above. Press Calculate cost and, when a price is available, continue with Book now. <strong>The booking is final only after confirmation by the property.</strong></p><form id="direct-request-form" data-property="NP-Apt"><button type="button" class="direct-send direct-calculate" data-calculate-cost><span class="lang-el">Υπολογισμός κόστους</span><span class="lang-en hidden">Calculate cost</span></button><div class="direct-quote-result" data-quote-result hidden role="status" aria-live="polite"></div><button type="button" class="direct-send direct-book-next" data-next-booking disabled aria-disabled="true"><span class="lang-el">Κράτηση</span><span class="lang-en hidden">Book now</span></button><p class="direct-estimate" data-direct-estimate aria-live="polite"></p><div class="direct-guest-details" data-guest-details hidden><div class="direct-request-fields"><label><span class="lang-el">Όνομα *</span><span class="lang-en hidden">First name *</span><input name="firstname" type="text" autocomplete="given-name" maxlength="70" required></label><label><span class="lang-el">Επώνυμο *</span><span class="lang-en hidden">Last name *</span><input name="lastname" type="text" autocomplete="family-name" maxlength="70" required></label><label><span class="lang-el">Κινητό τηλέφωνο *</span><span class="lang-en hidden">Mobile phone *</span><input name="mobile" type="tel" autocomplete="tel" inputmode="tel" maxlength="24" placeholder="+30 69..." required></label></div><label class="direct-consent"><input type="checkbox" required><span class="lang-el">Συμφωνώ να χρησιμοποιηθούν τα στοιχεία μου αποκλειστικά για την εξέταση του αιτήματος κράτησης και την επικοινωνία μαζί μου. *</span><span class="lang-en hidden">I agree that my details will be used only to process this booking request and contact me. *</span></label><button type="submit" class="direct-send" disabled><span class="lang-el">Υποβολή αιτήματος κράτησης</span><span class="lang-en hidden">Submit booking request</span></button></div><p class="direct-status" data-direct-status role="status" aria-live="polite"></p></form><dialog id="booking-contact-dialog" class="booking-contact-dialog" aria-labelledby="booking-contact-title"><h3 id="booking-contact-title" class="lang-el">Αίτημα κράτησης</h3><h3 class="lang-en hidden">Booking request</h3><p class="lang-el">Για να προχωρήσει το αίτημά σας, συμπληρώστε τα στοιχεία επικοινωνίας και πατήστε «Υποβολή αιτήματος κράτησης». <strong>Αφού λάβουμε το αίτημά σας, θα επικοινωνήσουμε μαζί σας από το κατάλυμα για την επιβεβαίωση και ολοκλήρωση της κράτησης.</strong> Το πάτημα «Κράτηση» δεν αποτελεί οριστική κράτηση.</p><p class="lang-en hidden">To proceed, enter your contact details and select “Submit booking request”. <strong>Once we receive your request, the property will contact you to confirm and finalize your reservation.</strong> Clicking “Book now” does not confirm a booking.</p><button type="button" data-close-booking-dialog class="direct-send"><span class="lang-el">Συνέχεια στη φόρμα</span><span class="lang-en hidden">Continue to form</span></button></dialog></div></section>
 <section class="section stay-faq" id="faq"><div class="section-title"><h2 class="lang-el">Συχνές ερωτήσεις</h2><h2 class="lang-en hidden">Frequently asked questions</h2></div><div class="faq-wrap"><div class="lang-el"><details><summary>Πού βρίσκεται το NP-Apt;</summary><p>Στην οδό Μπουμπουλίνας 3, στο Μουζάκι Καρδίτσας. Αποτελεί βάση για εκδρομές σε Τρίκαλα, Λίμνη Πλαστήρα, Μετέωρα, Ελάτη και Περτούλι.</p></details><details><summary>Είναι ο κήπος ιδιωτικός;</summary><p>Όχι. Ο κήπος είναι <strong>κοινόχρηστος</strong> μεταξύ των καταλυμάτων.</p></details><details><summary>Πόσα άτομα φιλοξενεί το διαμέρισμα;</summary><p>Η δηλωμένη χωρητικότητα του NP-Apt είναι έως 3 επισκέπτες. Επιβεβαιώστε τις επιλογές επισκεπτών στην πλατφόρμα κράτησης.</p></details><details><summary>Υπάρχει Wi-Fi, κουζίνα και κλιματισμός;</summary><p>Ναι, διατίθενται Wi-Fi, εξοπλισμένη κουζίνα και κλιματισμός. Δείτε αναλυτικά την ενότητα Παροχές.</p></details><details><summary>Πώς γίνεται το check-in;</summary><p>Υπάρχει αυτόνομο check-in. Οι προσωπικές οδηγίες πρόσβασης αποστέλλονται μετά την επιβεβαίωση της κράτησης.</p></details><details><summary>Πού βλέπω τιμές και διαθέσιμες ημερομηνίες;</summary><p>Στις καταχωρίσεις Booking.com και Airbnb. Το παρόν site δεν εμφανίζει ζωντανή διαθεσιμότητα.</p></details></div><div class="lang-en hidden"><details><summary>Where is NP-Apt located?</summary><p>At 3 Bouboulinas Street, Mouzaki, Karditsa. It makes a convenient base for trips to Trikala, Lake Plastiras, Meteora, Elati and Pertouli.</p></details><details><summary>Is the garden private?</summary><p>No, garden access is <strong>shared</strong> between the accommodations.</p></details><details><summary>How many guests can stay?</summary><p>NP-Apt is listed for up to 3 guests. Confirm guest options on your booking platform.</p></details><details><summary>Is there Wi-Fi, a kitchen and air conditioning?</summary><p>Yes. Wi-Fi, a fitted kitchen and air conditioning are provided. See the Amenities section for details.</p></details><details><summary>How does self check-in work?</summary><p>Detailed access instructions are shared privately after your booking is confirmed.</p></details><details><summary>Where can I see prices and available dates?</summary><p>On Booking.com and Airbnb. This website does not display live availability.</p></details></div></div></section>
 <section class="section" id="location">
 
@@ -950,85 +961,95 @@ document.documentElement.lang='en';
 </script>
 <script>
 (function(){
+  'use strict';
   const form=document.getElementById('date-search-form');
-  if(!form) return;
-  const arrival=form.querySelector('[name="checkin"]');
-  const departure=form.querySelector('[name="checkout"]');
-  const guests=form.querySelector('[name="guests"]');
-  const property=form.querySelector('[name="property"]');
+  if(!form)return;
+  const arrival=form.elements.checkin,departure=form.elements.checkout;
+  const adults=form.elements.adults,children=form.elements.children;
+  const agesContainer=form.querySelector('[data-child-ages]');
   const status=document.querySelector('.date-search-message');
   const links=[...form.querySelectorAll('a.booking-action')];
-  const urls={single:{booking:'https://www.booking.com/hotel/gr/np-apt-exclusive-stay-amp-relaxation-in-mouzaki.el.html',airbnb:'https://www.airbnb.gr/rooms/1692278528233220883'}};
-  function english(){return document.documentElement.lang==='en';}
-  function notice(el,en){status.textContent=english()?en:el;}
+  const urls={booking:'https://www.booking.com/hotel/gr/np-apt-exclusive-stay-amp-relaxation-in-mouzaki.el.html',airbnb:'https://www.airbnb.gr/rooms/1692278528233220883'};
+  const maxAdults=form.closest('.date-search-panel')?.nextElementSibling?.querySelector('[data-property="NP-Apt"]')?3:4;
+  const maxChildren=maxAdults===3?2:3;
+  const en=()=>document.documentElement.lang==='en';
+  function notice(el,english){status.textContent=en()?english:el;}
   function parseDate(text){
-    const match=/^(\d{2})\/(\d{2})\/(\d{4})$/.exec(text.trim());
-    if(!match) return null;
+    const match=/^(\d{2})\/(\d{2})\/(\d{4})$/.exec((text||'').trim());
+    if(!match)return null;
     const d=Number(match[1]),m=Number(match[2]),y=Number(match[3]);
-    if(y<2026||y>2100) return null;
+    if(y<2026||y>2100)return null;
     const value=new Date(y,m-1,d);
     if(value.getFullYear()!==y||value.getMonth()!==m-1||value.getDate()!==d)return null;
-    return String(y).padStart(4,'0')+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    return y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
   }
   function todayISO(){const now=new Date();return [now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');}
-  function updateGuests(){
-    if(!property)return;
-    const max=property.value==='np'?3:4;
-    for(const option of guests.options)option.disabled=Number(option.value)>max;
-    if(Number(guests.value)>max)guests.value=String(max);
+  function guests(){
+    const a=Number(adults.value),kids=Number(children.value);
+    if(!Number.isInteger(a)||!Number.isInteger(kids)||a<1||a>maxAdults||kids<0||kids>maxChildren||a+kids>4)return null;
+    const ages=[...agesContainer.querySelectorAll('[data-child-age]')].map(input=>input.value===''?NaN:Number(input.value));
+    if(ages.length!==kids||ages.some(age=>!Number.isInteger(age)||age<0||age>17))return null;
+    return {a,kids,ages};
   }
-  function getUrl(platform){
-    const start=parseDate(arrival.value),end=parseDate(departure.value);
-    if(!start||!end){notice('Συμπλήρωσε ημερομηνίες σε μορφή ηη/μμ/εεεε (π.χ. 25/12/2026).','Enter dates in dd/mm/yyyy format (e.g. 25/12/2026).');return null;}
-    if(start<todayISO()||end<=start){notice('Η άφιξη δεν μπορεί να είναι στο παρελθόν και η αναχώρηση πρέπει να ακολουθεί την άφιξη.','Check-in cannot be in the past, and check-out must be after check-in.');return null;}
-    status.textContent='';
-    const source=urls[property?property.value:'single'];
-    const url=new URL(source[platform]);
+  function getUrl(platform,silent){
+    const checkin=parseDate(arrival.value),checkout=parseDate(departure.value);
+    if(!checkin||!checkout||checkin<todayISO()||checkout<=checkin){
+      if(!silent)notice('Επίλεξε έγκυρες ημερομηνίες άφιξης και αναχώρησης (ηη/μμ/εεεε).','Choose valid check-in and check-out dates (dd/mm/yyyy).');
+      return null;
+    }
+    const party=guests();
+    if(!party){
+      if(!silent)notice('Συμπλήρωσε τουλάχιστον 1 ενήλικο, έως 4 επισκέπτες συνολικά και τις ηλικίες των παιδιών.','Choose at least 1 adult, no more than 4 guests in total, and all children’s ages.');
+      return null;
+    }
+    const url=new URL(urls[platform]);
     if(platform==='booking'){
-      url.searchParams.set('checkin',start);
-      url.searchParams.set('checkout',end);
-      url.searchParams.set('group_adults',guests.value);
+      url.searchParams.set('checkin',checkin);
+      url.searchParams.set('checkout',checkout);
+      url.searchParams.set('group_adults',String(party.a));
+      url.searchParams.set('group_children',String(party.kids));
+      url.searchParams.delete('age');
+      party.ages.forEach(age=>url.searchParams.append('age',String(age)));
       url.searchParams.set('no_rooms','1');
     }else{
-      url.searchParams.set('check_in',start);
-      url.searchParams.set('check_out',end);
-      url.searchParams.set('adults',guests.value);
+      // Airbnb counts ages 13+ as adults, 2-12 as children, 0-1 as infants.
+      url.searchParams.set('check_in',checkin);
+      url.searchParams.set('check_out',checkout);
+      url.searchParams.set('adults',String(party.a+party.ages.filter(age=>age>=13).length));
+      const kids=party.ages.filter(age=>age>=2&&age<=12).length;
+      const infants=party.ages.filter(age=>age<2).length;
+      if(kids)url.searchParams.set('children',String(kids));else url.searchParams.delete('children');
+      if(infants)url.searchParams.set('infants',String(infants));else url.searchParams.delete('infants');
     }
     return url.toString();
   }
   function refreshLinks(){
-    const start=parseDate(arrival.value),end=parseDate(departure.value);
-    const valid=start&&end&&start>=todayISO()&&end>start;
     for(const link of links){
-      if(valid){
-        const updated=getUrl(link.dataset.platform);
-        if(updated)link.href=updated;
-      }else{
-        link.href='#';
-      }
+      link.href=getUrl(link.dataset.platform,true)||'#';
     }
   }
-  function mask(el){
-    const digits=el.value.replace(/\D/g,'').slice(0,8);
-    el.value=digits.slice(0,2)+(digits.length>2?'/'+digits.slice(2,4):'')+(digits.length>4?'/'+digits.slice(4):'');
+  function mask(input){
+    const digits=input.value.replace(/\D/g,'').slice(0,8);
+    input.value=digits.slice(0,2)+(digits.length>2?'/'+digits.slice(2,4):'')+(digits.length>4?'/'+digits.slice(4):'');
   }
   for(const field of [arrival,departure]){
     field.addEventListener('input',()=>{mask(field);refreshLinks();status.textContent='';});
+    field.addEventListener('change',refreshLinks);
     field.addEventListener('blur',refreshLinks);
   }
-  guests.addEventListener('change',refreshLinks);
-  if(property){property.addEventListener('change',()=>{updateGuests();refreshLinks();});updateGuests();}
+  for(const field of [adults,children])field.addEventListener('change',()=>Promise.resolve().then(refreshLinks));
+  agesContainer.addEventListener('input',refreshLinks);
+  form.addEventListener('booking-guests-change',refreshLinks);
   for(const link of links){
     link.addEventListener('click',event=>{
-      const url=getUrl(link.dataset.platform);
+      const url=getUrl(link.dataset.platform,false);
       if(!url){event.preventDefault();return;}
       link.href=url;
-      // Normal anchor navigation with target=_blank is permitted by popup blockers.
     });
   }
   form.addEventListener('submit',event=>{
     event.preventDefault();
-    const url=getUrl('booking');
+    const url=getUrl('booking',false);
     if(url)window.location.assign(url);
   });
   refreshLinks();
