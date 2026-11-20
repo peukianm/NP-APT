@@ -61,8 +61,7 @@
     const updated = new Date(payload.lastUpdated);
     const stamp = new Intl.DateTimeFormat(language() === 'en' ? 'en-GB' : 'el-GR',
       {dateStyle: 'medium', timeStyle: 'short', timeZone: 'Europe/Athens'}).format(updated);
-    status.textContent = message('Τελευταίος συγχρονισμός: ', 'Last sync: ') + stamp +
-      message(' · Οι ημερομηνίες είναι ενδεικτικές, όχι ζωντανή εγγύηση.', ' · Dates are indicative, not a live availability guarantee.');
+    status.textContent = message('Τελευταίος συγχρονισμός: ', 'Last sync: ') + stamp;
   }
   prev.addEventListener('click', () => { monthOffset = Math.max(0, monthOffset - 1); draw(); });
   next.addEventListener('click', () => { monthOffset = Math.min(7, monthOffset + 1); draw(); });
