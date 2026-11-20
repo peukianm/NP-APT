@@ -127,9 +127,41 @@ function displayOffer(offer){
   summary.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 for(const element of [start,end])for(const event of ['input','change'])element.addEventListener(event,reset);
-adults.addEventListener('change',reset);
-children.addEventListener('change',()=>{renderAges();reset();});
-renderAges();reset();
+const guestNote=document.createElement('p');
+guestNote.className='direct-guest-count';
+guestNote.setAttribute('role','status');
+guestNote.setAttribute('aria-live','polite');
+agesContainer.insertAdjacentElement('afterend',guestNote);
+function syncGuestCounts(changed){
+  const oldAdults=Number(adults.value),oldChildren=Number(children.value);
+  let a=Number.isInteger(oldAdults)?oldAdults:1;
+  let kids=Number.isInteger(oldChildren)?oldChildren:0;
+  if(changed==='children'){
+    kids=Math.max(0,Math.min(maxChildren,maxTotal-1,kids));
+    a=Math.max(1,Math.min(maxAdults,maxTotal-kids,a));
+  }else{
+    a=Math.max(1,Math.min(maxAdults,a));
+    kids=Math.max(0,Math.min(maxChildren,maxTotal-a,kids));
+  }
+  adults.value=String(a);
+  children.value=String(kids);
+  renderAges();
+  reset();
+  const chosen=a+kids;
+  const adjusted=a!==oldAdults||kids!==oldChildren;
+  guestNote.textContent=tr(
+    'Σύνολο επισκεπτών: '+chosen+' / '+maxTotal+' · Τουλάχιστον 1 ενήλικος.'+(adjusted?' Οι επιλογές προσαρμόστηκαν στο όριο χωρητικότητας.':''),
+    'Total guests: '+chosen+' / '+maxTotal+' · At least 1 adult required.'+(adjusted?' The selections were adjusted to the occupancy limit.':'')
+  );
+  const platformGuests=dates.querySelector('[name="guests"]');
+  if(platformGuests&&platformGuests.value!==String(chosen)){
+    platformGuests.value=String(chosen);
+    platformGuests.dispatchEvent(new Event('change',{bubbles:true}));
+  }
+}
+adults.addEventListener('change',()=>syncGuestCounts('adults'));
+children.addEventListener('change',()=>syncGuestCounts('children'));
+syncGuestCounts('adults');
 calculate.addEventListener('click',async()=>{
   reset();calculate.disabled=true;say('Ελέγχουμε διαθεσιμότητα και τιμές…','Checking availability and rates…');
   try{
