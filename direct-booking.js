@@ -247,8 +247,9 @@ form.addEventListener('submit',async event=>{
     const result=await response.json();
     if(result.success!==true)throw Error('Email not confirmed');
     status.textContent='';
-    say('Το αίτημά σας στάλθηκε επιτυχώς. Θα επικοινωνήσουμε μαζί σας από το κατάλυμα για την ολοκλήρωση της κράτησης.','Your request was sent successfully. The property will contact you to finalize the booking.');
+    say('Λάβαμε το αίτημά σας! Θα επικοινωνήσουμε άμεσα μαζί σας για την ολοκλήρωση της κράτησης.','We have received your booking request! We will contact you shortly to finalize your booking.');
     active=null;next.disabled=true;details.hidden=true;
+    status.scrollIntoView?.({behavior:'smooth',block:'center'});
   }catch(error){
     say('Δεν επιβεβαιώθηκε η αποστολή του email. Το αίτημα ΔΕΝ έχει καταχωριστεί. Δοκιμάστε ξανά ή επικοινωνήστε μαζί μας.','Email delivery could not be confirmed. Your request was NOT recorded. Please try again or contact us.');
   }finally{
