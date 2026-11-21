@@ -1,14 +1,13 @@
 {
   "schemaVersion": 1,
   "source": "Booking.com + Airbnb iCal",
-  "lastUpdated": "2026-11-21T08:54:10Z",
+  "lastUpdated": "2026-11-21T12:31:19Z",
   "horizonDays": 1502,
   "horizonStartDate": "2026-11-21",
   "calendarEndDate": "2030-12-31",
   "blockedDates": [
     "2026-11-21",
     "2026-11-28",
-    "2026-12-05",
     "2026-12-09",
     "2026-12-10",
     "2026-12-11",
