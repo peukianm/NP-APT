@@ -11,6 +11,21 @@
   const now = new Date();
   const localToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const firstMonth = new Date(localToday.getFullYear(), localToday.getMonth(), 1);
+  const lastDay = new Date(2030, 11, 31);
+  const maxMonthOffset = Math.max(0, (2030 - firstMonth.getFullYear()) * 12 + 11 - firstMonth.getMonth());
+  const period = document.createElement('div');
+  period.className = 'avail-period-selects';
+  const monthSelect = document.createElement('select');
+  const yearSelect = document.createElement('select');
+  monthSelect.dataset.selectMonth = ''; yearSelect.dataset.selectYear = '';
+  for (let index = 0; index < 12; index++) {
+    const option = document.createElement('option'); option.value = String(index); monthSelect.appendChild(option);
+  }
+  for (let year = firstMonth.getFullYear(); year <= 2030; year++) {
+    const option = document.createElement('option'); option.value = String(year); option.textContent = year; yearSelect.appendChild(option);
+  }
+  period.append(monthSelect, yearSelect);
+  root.querySelector('.avail-toolbar').after(period);
   let monthOffset = 0;
   let payload = null;
   let fresh = false;
@@ -60,20 +75,31 @@
   function draw() {
     const month = new Date(firstMonth.getFullYear(), firstMonth.getMonth() + monthOffset, 1);
     monthLabel.textContent = new Intl.DateTimeFormat(language() === 'en' ? 'en-GB' : 'el-GR', { month: 'long', year: 'numeric' }).format(month);
+    monthSelect.setAttribute('aria-label', message('Μήνας ημερολογίου', 'Calendar month'));
+    yearSelect.setAttribute('aria-label', message('Έτος ημερολογίου', 'Calendar year'));
+    monthSelect.disabled = yearSelect.disabled = firstMonth > lastDay;
+    monthSelect.value = String(month.getMonth()); yearSelect.value = String(month.getFullYear());
+    for (const option of monthSelect.options) {
+      const candidate = new Date(month.getFullYear(), Number(option.value), 1);
+      option.textContent = new Intl.DateTimeFormat(language() === 'en' ? 'en-GB' : 'el-GR', { month: 'long' }).format(candidate);
+      option.disabled = candidate < firstMonth || candidate > lastDay;
+    }
     prev.disabled = monthOffset <= 0;
-    next.disabled = monthOffset >= 7;
+    next.disabled = monthOffset >= maxMonthOffset;
     grid.replaceChildren();
     const weekdays = language() === 'en' ? ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] : ['Δε','Τρ','Τε','Πε','Πα','Σα','Κυ'];
     weekdays.forEach(d => grid.appendChild(cell(d, 'avail-weekday')));
     const shift = (month.getDay() + 6) % 7;
     for (let k = 0; k < shift; k++) grid.appendChild(cell('', 'avail-empty'));
     const count = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
-    const maxDate = new Date(localToday.getFullYear(), localToday.getMonth(), localToday.getDate() + 240);
+    const publishedDays = Number(payload?.horizonDays);
+    const legacyDays = Number.isInteger(publishedDays) && publishedDays >= 0 ? publishedDays : 240;
+    const maxDate = payload?.calendarEndDate === '2030-12-31' ? new Date(2031, 0, 1) : new Date(localToday.getFullYear(), localToday.getMonth(), localToday.getDate() + legacyDays);
     for (let dayNo = 1; dayNo <= count; dayNo++) {
       const day = new Date(month.getFullYear(), month.getMonth(), dayNo);
       const date = iso(day);
       const isOld = day < localToday;
-      const isOutside = day >= maxDate;
+      const isOutside = day >= maxDate || day > lastDay;
       const reserved = fresh && blocked.has(date);
       const available = !isOld && !isOutside && fresh && !reserved;
       let cls = 'avail-day';
@@ -102,12 +128,17 @@
     status.textContent = message('Τελευταίος συγχρονισμός: ', 'Last sync: ') + stamp;
   }
   prev.addEventListener('click', () => { monthOffset = Math.max(0, monthOffset - 1); draw(); });
-  next.addEventListener('click', () => { monthOffset = Math.min(7, monthOffset + 1); draw(); });
+  next.addEventListener('click', () => { monthOffset = Math.min(maxMonthOffset, monthOffset + 1); draw(); });
+  function jumpToPeriod() {
+    const offset = (Number(yearSelect.value) - firstMonth.getFullYear()) * 12 + Number(monthSelect.value) - firstMonth.getMonth();
+    monthOffset = Math.max(0, Math.min(maxMonthOffset, offset)); draw();
+  }
+  monthSelect.addEventListener('change', jumpToPeriod); yearSelect.addEventListener('change', jumpToPeriod);
   document.querySelectorAll('.lang-switch button').forEach(b => b.addEventListener('click', () => { draw(); showStatus(); }));
   draw();
   showStatus();
   loadRates().catch(() => { rateDays = null; draw(); });
-  fetch('https://raw.githubusercontent.com/peukianm/' + repo + '/main/availability.json', {cache: 'no-store'})
+  fetch('https://raw.githubusercontent.com/peukianm/' + repo + '/main/availability.json?ts=' + Date.now(), {cache: 'no-store'})
     .then(response => { if (!response.ok) throw Error('No published calendar'); return response.json(); })
     .then(data => {
       if (data.schemaVersion !== 1 || !Array.isArray(data.blockedDates) || typeof data.lastUpdated !== 'string') throw Error('Invalid data');
@@ -120,4 +151,5 @@
     })
     .catch(() => { fresh = false; draw(); showStatus(); });
 })();
+
 

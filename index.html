@@ -388,6 +388,13 @@ justify-content:center;
 #availability .avail-day-price{display:block;font-size:.875rem;line-height:1.15;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
 #availability .avail-price-caption{font-size:.75rem;line-height:1.35;color:#ddd;margin:0 0 16px}
 @media(max-width:700px){#availability .avail-day{min-height:52px}#availability .avail-day-price{font-size:.75rem}}
+
+/* Direct month and year selection through the final calendar month. */
+.avail-period-selects,.bdp-jump{display:flex;gap:8px;margin:0 0 12px}
+.avail-period-selects select,.bdp-jump select{box-sizing:border-box;min-width:0;flex:1;border-radius:7px;padding:7px 8px;font-size:14px;line-height:1.2}
+.avail-period-selects select{background:#303030;color:#f1d785;border:1px solid #736240}
+.bdp-jump select{background:#fff;color:#222;border:1px solid #b8b0a0}
+.avail-period-selects select:last-child,.bdp-jump select:last-child{flex:0 0 90px}
 </style>
 
 <link rel="canonical" href="https://np.together-home.gr/">
@@ -1135,11 +1142,12 @@ document.documentElement.lang='en';
 <script>
 (function(){const toggle=document.querySelector('.site-nav-toggle');const nav=document.getElementById('site-main-nav');if(!toggle||!nav)return;toggle.addEventListener('click',()=>{const opened=nav.classList.toggle('nav-open');toggle.setAttribute('aria-expanded',String(opened))});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('nav-open');toggle.setAttribute('aria-expanded','false')}))})();
 </script>
-<script src="/availability-calendar.js" defer></script>
-<script src="/booking-datepicker.js" defer></script>
+<script src="/availability-calendar.js?v=20261121-calendar2030" defer></script>
+<script src="/booking-datepicker.js?v=20261121-calendar2030" defer></script>
 <script src="/booking-email-config.js" defer></script>
-<script src="/direct-booking.js" defer></script>
+<script src="/direct-booking.js?v=20261121-calendar2030" defer></script>
 </body>
 </html>
+
 
 

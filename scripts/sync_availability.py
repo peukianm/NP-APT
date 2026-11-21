@@ -15,7 +15,7 @@ from zoneinfo import ZoneInfo
 
 TZ = ZoneInfo("Europe/Athens")
 OUT = Path("availability.json")
-HORIZON = 240
+CALENDAR_END_DATE = dt.date(2030, 12, 31)
 MAX_FEED_BYTES = 2_000_000
 
 def unfold(ical):
@@ -50,7 +50,7 @@ def blocks_from_feed(text):
     props = {}
     saw_events = 0
     today = dt.datetime.now(TZ).date()
-    max_date = today + dt.timedelta(days=HORIZON)
+    max_date = CALENDAR_END_DATE + dt.timedelta(days=1)
     for line in unfold(text):
         if line == "BEGIN:VEVENT":
             if in_event:
@@ -118,11 +118,15 @@ def main():
     # Set union eliminates duplicates when calendars sync with one another.
     blocked = sorted(set(booking_days).union(airbnb_days))
     now = dt.datetime.now(dt.timezone.utc).replace(microsecond=0)
+    local_today = now.astimezone(TZ).date()
+    horizon_days = max(0, (CALENDAR_END_DATE + dt.timedelta(days=1) - local_today).days)
     result = {
         "schemaVersion": 1,
         "source": "Booking.com + Airbnb iCal",
         "lastUpdated": now.isoformat().replace("+00:00", "Z"),
-        "horizonDays": HORIZON,
+        "horizonDays": horizon_days,
+        "horizonStartDate": local_today.isoformat(),
+        "calendarEndDate": CALENDAR_END_DATE.isoformat(),
         "blockedDates": blocked,
         "notice": "Indicative only. Verify dates and prices on Booking.com or Airbnb."
     }
@@ -143,3 +147,4 @@ if __name__ == "__main__":
         # Do not print raw exception string: could contain the secret URL.
         print("Calendar sync failed. Inspect configuration or iCal feed.", file=sys.stderr)
         sys.exit(1)
+

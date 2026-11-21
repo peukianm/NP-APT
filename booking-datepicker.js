@@ -11,11 +11,13 @@
     picker.setAttribute('role','dialog');
     picker.setAttribute('aria-label','Choose date');
     picker.hidden=true;
-    picker.innerHTML='<div class="bdp-heading"><button type="button" class="bdp-prev" aria-label="Previous month">‹</button><strong class="bdp-month"></strong><button type="button" class="bdp-next" aria-label="Next month">›</button><button type="button" class="bdp-close" aria-label="Close calendar">×</button></div><div class="bdp-days" role="grid"></div>';
+    picker.innerHTML='<div class="bdp-heading"><button type="button" class="bdp-prev" aria-label="Previous month">‹</button><strong class="bdp-month"></strong><button type="button" class="bdp-next" aria-label="Next month">›</button><button type="button" class="bdp-close" aria-label="Close calendar">×</button></div><div class="bdp-jump"><select class="bdp-select-month"></select><select class="bdp-select-year"></select></div><div class="bdp-days" role="grid"></div>';
     document.body.appendChild(picker);
     const prev=picker.querySelector('.bdp-prev'),next=picker.querySelector('.bdp-next');
     const closeBtn=picker.querySelector('.bdp-close');
     const monthName=picker.querySelector('.bdp-month'),grid=picker.querySelector('.bdp-days');
+    const monthSelect=picker.querySelector('.bdp-select-month'),yearSelect=picker.querySelector('.bdp-select-year');
+    for(let index=0;index<12;index++){const option=document.createElement('option');option.value=String(index);monthSelect.appendChild(option);}
     let field=null,month=new Date(),prior=null;
     function english(){return document.documentElement.lang==='en'}
     function text(el,en){return english()?en:el}
@@ -35,6 +37,7 @@
       }
       return d;
     }
+    function maximum(){return field===end?new Date(2031,0,1):new Date(2030,11,31)}
     function appendDay(label,kind,disabled,callback,title){
       const node=document.createElement('button');
       node.type='button';node.className='bdp-day '+kind;
@@ -45,10 +48,18 @@
     }
     function render(){
       if(!field)return;
-      const min=minimum();monthName.textContent=new Intl.DateTimeFormat(english()?'en-GB':'el-GR',{month:'long',year:'numeric'}).format(month);
-      const first=new Date(month.getFullYear(),month.getMonth(),1);
+      const min=minimum(),max=maximum();
       const minMonth=new Date(min.getFullYear(),min.getMonth(),1);
-      const maxMonth=new Date(today().getFullYear()+2,today().getMonth(),1);
+      const maxMonth=new Date(max.getFullYear(),max.getMonth(),1);
+      if(month<minMonth)month=new Date(minMonth);if(month>maxMonth)month=new Date(maxMonth);
+      const first=new Date(month.getFullYear(),month.getMonth(),1);
+      monthName.textContent=new Intl.DateTimeFormat(english()?'en-GB':'el-GR',{month:'long',year:'numeric'}).format(month);
+      monthSelect.setAttribute('aria-label',text('Μήνας επιλογής ημερομηνίας','Date picker month'));
+      yearSelect.setAttribute('aria-label',text('Έτος επιλογής ημερομηνίας','Date picker year'));
+      yearSelect.replaceChildren();
+      for(let year=min.getFullYear();year<=max.getFullYear();year++){const option=document.createElement('option');option.value=String(year);option.textContent=year;yearSelect.appendChild(option);}
+      monthSelect.value=String(month.getMonth());yearSelect.value=String(month.getFullYear());
+      for(const option of monthSelect.options){const candidate=new Date(month.getFullYear(),Number(option.value),1);option.textContent=new Intl.DateTimeFormat(english()?'en-GB':'el-GR',{month:'long'}).format(candidate);option.disabled=candidate<minMonth||candidate>maxMonth;}
       prev.disabled=first<=minMonth;
       next.disabled=first>=maxMonth;
       grid.replaceChildren();
@@ -60,7 +71,7 @@
       const count=new Date(month.getFullYear(),month.getMonth()+1,0).getDate();
       for(let d=1;d<=count;d++){
         const date=new Date(month.getFullYear(),month.getMonth(),d);
-        appendDay(String(d),selected&&selected.getTime()===date.getTime()?'bdp-selected':'',date<min||date.getFullYear()>today().getFullYear()+2,()=>choose(date),display(date));
+        appendDay(String(d),selected&&selected.getTime()===date.getTime()?'bdp-selected':'',date<min||date>max,()=>choose(date),display(date));
       }
     }
     function position(){
@@ -77,8 +88,8 @@
     function open(input){
       if(!picker.hidden&&field===input){close(false);return;}
       field=input;prior=input;
-      const min=minimum(), selected=parse(input.value);
-      const reference=selected&&selected>=min?selected:min;
+      const min=minimum(),max=maximum(),selected=parse(input.value);
+      const reference=selected&&selected>=min&&selected<=max?selected:min;
       month=new Date(reference.getFullYear(),reference.getMonth(),1);
       picker.hidden=false;picker.style.display='block';render();position();
       closeBtn.focus({preventScroll:true});
@@ -107,6 +118,8 @@
     }
     prev.addEventListener('click',()=>{month=new Date(month.getFullYear(),month.getMonth()-1,1);render();position()});
     next.addEventListener('click',()=>{month=new Date(month.getFullYear(),month.getMonth()+1,1);render();position()});
+    function jump(){month=new Date(Number(yearSelect.value),Number(monthSelect.value),1);render();position()}
+    monthSelect.addEventListener('change',jump);yearSelect.addEventListener('change',jump);
     closeBtn.addEventListener('click',()=>close(true));
     document.addEventListener('pointerdown',e=>{if(!picker.hidden&&!picker.contains(e.target)&&e.target!==start&&e.target!==end)close(false)});
     document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!picker.hidden){e.preventDefault();close(true)}});
@@ -117,3 +130,4 @@
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
+

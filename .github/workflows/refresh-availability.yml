@@ -1,5 +1,10 @@
 name: Refresh Booking.com + Airbnb availability
 on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/sync_availability.py
+      - .github/workflows/refresh-availability.yml
   schedule:
     - cron: '7,37 * * * *'
   workflow_dispatch:
@@ -28,3 +33,4 @@ jobs:
             git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "Update availability data"
             git push
           fi
+

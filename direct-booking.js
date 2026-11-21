@@ -103,7 +103,9 @@ function price(stayInfo,guest,rateData){
 }
 function ensureNoBlocked(stayInfo,cal){
   const horizon=Number(cal.horizonDays)||240;
-  if(stayInfo.b>new Date(today().getTime()+horizon*86400000))throw Error('Dates beyond calendar horizon');
+  const calendarEnd=new Date(Date.UTC(2031,0,1));
+  const coverageEnd=cal.calendarEndDate==='2030-12-31'?calendarEnd:new Date(today().getTime()+horizon*86400000);
+  if(stayInfo.b>calendarEnd||stayInfo.b>coverageEnd)throw Error('Dates beyond calendar horizon');
   const blocks=new Set(cal.blockedDates);
   for(let t=stayInfo.a.getTime();t<stayInfo.b.getTime();t+=86400000){
     if(blocks.has(iso(new Date(t))))throw Error('Blocked date');
@@ -255,3 +257,4 @@ form.addEventListener('submit',async event=>{
   }
 });
 })();
+
