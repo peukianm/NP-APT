@@ -57,10 +57,10 @@
       "baseTwoAdults": 65
     },
     "2026-12-04": {
-      "baseTwoAdults": 78
+      "baseTwoAdults": 82
     },
     "2026-12-05": {
-      "baseTwoAdults": 78
+      "baseTwoAdults": 82
     },
     "2026-12-06": {
       "baseTwoAdults": 65
@@ -78,10 +78,10 @@
       "baseTwoAdults": 65
     },
     "2026-12-11": {
-      "baseTwoAdults": 78
+      "baseTwoAdults": 82
     },
     "2026-12-12": {
-      "baseTwoAdults": 78
+      "baseTwoAdults": 82
     },
     "2026-12-13": {
       "baseTwoAdults": 65
@@ -99,7 +99,10 @@
       "baseTwoAdults": 65
     },
     "2026-12-18": {
-      "baseTwoAdults": 78
+      "baseTwoAdults": 82
+    },
+    "2026-12-19": {
+      "baseTwoAdults": 82
     },
     "2027-01-10": {
       "baseTwoAdults": 62
