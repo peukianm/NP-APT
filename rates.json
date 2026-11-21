@@ -20,6 +20,9 @@
     "maxTotal": 4
   },
   "days": {
+    "2026-11-21": {
+      "baseTwoAdults": 78
+    },
     "2026-11-23": {
       "baseTwoAdults": 65
     },
@@ -33,6 +36,9 @@
       "baseTwoAdults": 65
     },
     "2026-11-27": {
+      "baseTwoAdults": 78
+    },
+    "2026-11-28": {
       "baseTwoAdults": 78
     },
     "2026-11-29": {
@@ -53,6 +59,9 @@
     "2026-12-04": {
       "baseTwoAdults": 78
     },
+    "2026-12-05": {
+      "baseTwoAdults": 78
+    },
     "2026-12-06": {
       "baseTwoAdults": 65
     },
@@ -69,6 +78,9 @@
       "baseTwoAdults": 65
     },
     "2026-12-11": {
+      "baseTwoAdults": 78
+    },
+    "2026-12-12": {
       "baseTwoAdults": 78
     },
     "2026-12-13": {
