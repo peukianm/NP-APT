@@ -2,6 +2,7 @@
 (function () {
   const root = document.getElementById('public-availability-calendar');
   if (!root) return;
+  const repo = 'NP-APT';
   const monthLabel = root.querySelector('[data-month]');
   const grid = root.querySelector('[data-days]');
   const status = root.querySelector('[data-status]');
@@ -14,6 +15,7 @@
   let payload = null;
   let fresh = false;
   let blocked = new Set();
+  let rateDays = null;
 
   function language() { return document.documentElement.lang === 'en' ? 'en' : 'el'; }
   function message(el, en) { return language() === 'en' ? en : el; }
@@ -26,6 +28,34 @@
     span.textContent = label;
     if (title) { span.title = title; span.setAttribute('aria-label', title); }
     return span;
+  }
+  function baseRate(date) {
+    const amount = rateDays?.[date]?.baseTwoAdults;
+    return typeof amount === 'number' && Number.isFinite(amount) && amount >= 0 ? amount : null;
+  }
+  function nightlyPrice(amount) {
+    if (amount === null) return message('Ν/Α', 'N/A');
+    return new Intl.NumberFormat(language() === 'en' ? 'en-GB' : 'el-GR', {
+      style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 2
+    }).format(amount);
+  }
+  async function loadRates() {
+    let data;
+    try {
+      const response = await fetch('https://api.github.com/repos/peukianm/' + repo + '/contents/rates.json?ref=main&ts=' + Date.now(), {cache: 'no-store'});
+      if (!response.ok) throw Error('No published rates');
+      const file = await response.json();
+      if (file.encoding !== 'base64' || typeof file.content !== 'string') throw Error('Invalid rates file');
+      const bytes = Uint8Array.from(atob(file.content.replace(/\s/g, '')), char => char.charCodeAt(0));
+      data = JSON.parse(new TextDecoder().decode(bytes));
+    } catch (error) {
+      const response = await fetch('https://raw.githubusercontent.com/peukianm/' + repo + '/main/rates.json?ts=' + Date.now(), {cache: 'no-store'});
+      if (!response.ok) throw Error('No published rates');
+      data = await response.json();
+    }
+    if (data.schemaVersion !== 1 || data.currency !== 'EUR' || data.status !== 'active' || !data.days || typeof data.days !== 'object' || Array.isArray(data.days)) throw Error('Rates not configured');
+    rateDays = data.days;
+    draw();
   }
   function draw() {
     const month = new Date(firstMonth.getFullYear(), firstMonth.getMonth() + monthOffset, 1);
@@ -41,16 +71,24 @@
     const maxDate = new Date(localToday.getFullYear(), localToday.getMonth(), localToday.getDate() + 240);
     for (let dayNo = 1; dayNo <= count; dayNo++) {
       const day = new Date(month.getFullYear(), month.getMonth(), dayNo);
+      const date = iso(day);
       const isOld = day < localToday;
       const isOutside = day >= maxDate;
-      const reserved = fresh && blocked.has(iso(day));
+      const reserved = fresh && blocked.has(date);
+      const available = !isOld && !isOutside && fresh && !reserved;
       let cls = 'avail-day';
       let title = '';
       if (isOld) { cls += ' avail-past'; title = message('Παρελθούσα ημερομηνία', 'Past date'); }
       else if (!fresh || isOutside) { cls += ' avail-unknown'; title = message('Δεν υπάρχουν επιβεβαιωμένα στοιχεία', 'Status not verified'); }
       else if (reserved) { cls += ' avail-blocked'; title = message('Δεσμευμένη', 'Blocked'); }
       else { cls += ' avail-tentative'; title = message('Χωρίς γνωστή δέσμευση — επιβεβαίωση στην πλατφόρμα', 'No reported block — confirm on booking platform'); }
-      grid.appendChild(cell(String(dayNo), cls, iso(day) + ': ' + title));
+      const amount = available ? baseRate(date) : null;
+      if (available) title += ' · ' + message('Βασική τιμή για 2 ενήλικες / νύχτα: ', 'Base rate for 2 adults / night: ') + nightlyPrice(amount);
+      const dayCell = cell('', cls, date + ': ' + title);
+      dayCell.dataset.date = date;
+      dayCell.appendChild(cell(String(dayNo), 'avail-day-number'));
+      if (available) dayCell.appendChild(cell(nightlyPrice(amount), 'avail-day-price'));
+      grid.appendChild(dayCell);
     }
   }
   function showStatus() {
@@ -68,7 +106,8 @@
   document.querySelectorAll('.lang-switch button').forEach(b => b.addEventListener('click', () => { draw(); showStatus(); }));
   draw();
   showStatus();
-  fetch('https://raw.githubusercontent.com/peukianm/NP-APT/main/availability.json', {cache: 'no-store'})
+  loadRates().catch(() => { rateDays = null; draw(); });
+  fetch('https://raw.githubusercontent.com/peukianm/' + repo + '/main/availability.json', {cache: 'no-store'})
     .then(response => { if (!response.ok) throw Error('No published calendar'); return response.json(); })
     .then(data => {
       if (data.schemaVersion !== 1 || !Array.isArray(data.blockedDates) || typeof data.lastUpdated !== 'string') throw Error('Invalid data');
@@ -81,3 +120,4 @@
     })
     .catch(() => { fresh = false; draw(); showStatus(); });
 })();
+
